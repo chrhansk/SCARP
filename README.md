@@ -3,7 +3,10 @@
 SCARP stands for *Switching Cost Aware Rounding*. The methods rounds
 fractional solutions of Mixed-Integer Optimal Control Problems
 (MIOCPs) to binary ones based on a shortest path through an
-appropriately defined graph.
+appropriately defined graph. This implementation supplements the article
+
+[Bestehorn, Felix, et al. "Mixed-Integer Optimal Control Problems with switching costs: A shortest path approach."](http://www.optimization-online.org/DB_FILE/2020/02/7630.pdf)
+
 
 ## Dependencies
 
