@@ -1,25 +1,28 @@
 # SCARP
 
-Switching Cost Aware Rounding of Mixed-Integer Optimal Control Problems
+SCARP stands for *Switching Cost Aware Rounding*. The methods rounds
+fractional solutions of Mixed-Integer Optimal Control Problems
+(MIOCPs) to binary ones based on a shortest path through an
+appropriately defined graph.
 
 ## Dependencies
 
 You will need to satisfy the following dependencies in order to compile SCARP
 
-- A C++-11 compiler, such as gcc / clang
-- CMake >= 3.1
-- Boost >= 1.54
+- A `C++` compiler supporting `C++11`, such as [gcc](https://gcc.gnu.org/) or [clang](https://clang.llvm.org/)
+- [CMake](https://cmake.org/) `>= 3.1`
+- [Boost](https://www.boost.org/) `>= 1.54`
 
 ## Build
 
 The following commands build and test SCARP when executed in the
 root folder of the project:
 
-- mkdir build
-- cd build
-- cmake ..
-- make
-- make test
+- `mkdir build`
+- `cd build`
+- `cmake ..`
+- `make`
+- `make test`
 
 ## Instances
 
