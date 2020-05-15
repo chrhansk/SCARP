@@ -1,0 +1,9 @@
+#ifndef DEFS_HH
+#define DEFS_HH
+
+#define BASE_DIRECTORY "@CMAKE_SOURCE_DIR@"
+#define DATASET_DIRECTORY "@CMAKE_SOURCE_DIR@/dataset"
+
+#define TESTS_DIRECTORY "@CMAKE_SOURCE_DIR@/dataset/tests"
+
+#endif /* DEFS_HH */
