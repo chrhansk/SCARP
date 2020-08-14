@@ -84,7 +84,7 @@ int main(int argc, char **argv)
       .total_cost(sur_controls, fractional_controls);
 
     Log(info) << "SUR costs of rounded controls: " << control_costs
-              << ", upper bound: " << sur_upper_bound(dimension)
+              << ", upper bound: " << max_control_deviation(dimension)
               << ", switching cost: " << switch_costs;
 
   }

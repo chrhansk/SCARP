@@ -36,16 +36,3 @@ std::vector<double> default_switch_off_costs(idx dimension)
 
   return switch_off_costs;
 }
-
-
-double sur_upper_bound(idx dimension)
-{
-  double bound = 0.;
-
-  for(idx i = 2; i <= dimension; ++i)
-  {
-    bound += 1./ ((double) i);
-  }
-
-  return bound;
-}
