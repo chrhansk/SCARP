@@ -9,7 +9,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 enable_testing()
 
 configure_file("${CMAKE_SOURCE_DIR}/cmake/CMakeLists.txt.in"
-  googletest-download/CMakeLists.txt)
+  googletest-src/CMakeLists.txt)
 
 execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/googletest-download )
