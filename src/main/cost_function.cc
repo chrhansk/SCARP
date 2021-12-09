@@ -54,7 +54,7 @@ double CostFunction::total_cost(const std::vector<Controls>& controls,
 
     total_cost = (*this)(Label(control_sums, previous_control, total_cost),
                          next_control,
-                         fractional_control_sums.at(next_control));
+                         fractional_control_sums);
 
     control_sums.at(next_control)++;
 

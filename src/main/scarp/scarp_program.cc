@@ -82,7 +82,7 @@ void SCARPProgram::expand_label(SCARPLabelPtr label)
   {
     double next_cost = costs(*label,
                              next_control,
-                             fractional_sum.at(next_control));
+                             fractional_sum);
 
     auto next_label = std::make_shared<SCARPLabel>(next_control,
                                                    next_cost,

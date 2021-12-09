@@ -1,6 +1,8 @@
 #ifndef COST_FUNCTION_HH
 #define COST_FUNCTION_HH
 
+#include <cassert>
+
 #include "controls.hh"
 #include "label.hh"
 
@@ -15,7 +17,7 @@ public:
   // sum includes next_control
   virtual double operator()(const Label& previous_label,
                             idx next_control,
-                            double fractional_control_sum) const = 0;
+                            const std::vector<double>& fractional_control_sums) const = 0;
 
   double total_cost(const std::vector<Controls>& controls,
                     const std::vector<Controls>& fractional_controls) const;
@@ -47,11 +49,11 @@ public:
 
   double operator()(const Label& previous_label,
                     idx next_control,
-                    double fractional_control_sum) const override
+                    const std::vector<double>& fractional_control_sums) const override
   {
-    idx previous_control = previous_label.get_current_control();
+    const idx previous_control = previous_label.get_current_control();
 
-    double previous_cost = previous_label.get_cost();
+    const double previous_cost = previous_label.get_cost();
 
     if(previous_control == next_control)
     {
@@ -79,13 +81,30 @@ class SURCosts : public CostFunction
 
   double operator()(const Label& previous_label,
                     idx next_control,
-                    double fractional_control_sum) const override
+                    const std::vector<double>& fractional_control_sums) const override
   {
-    double next_control_sum = previous_label.get_control_sums().at(next_control) + 1;
+    const idx num_controls = previous_label.get_control_sums().size();
+    assert(fractional_control_sums.size() == num_controls);
 
-    double next_cost = std::abs(next_control_sum - fractional_control_sum);
+    double next_cost = previous_label.get_cost();
 
-    return std::max(previous_label.get_cost(), next_cost);
+    for(idx control = 0; control < num_controls; ++control)
+    {
+      double next_control_sum = previous_label.get_control_sums().at(control);
+
+      if(control == next_control)
+      {
+        ++next_control_sum;
+      }
+
+      const double fractional_control_sum = fractional_control_sums.at(control);
+
+      const double current_control_cost = std::abs(next_control_sum - fractional_control_sum);
+
+      next_cost = std::max(current_control_cost, next_cost);
+    }
+
+    return next_cost;
   }
 };
 
