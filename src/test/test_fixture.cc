@@ -2,6 +2,7 @@
 
 #include <iostream>
 
+#include <boost/filesystem/fstream.hpp>
 #include <boost/algorithm/string.hpp>
 
 #include <gtest/gtest.h>
