@@ -31,9 +31,9 @@ std::vector<std::string> get_tokens(const std::string& line)
   return filtered_tokens;
 }
 
-std::vector<Controls> ControlReader::read(std::istream& input)
+FractionalControls ControlReader::read(std::istream& input)
 {
-  std::vector<Controls> controls;
+  std::vector<std::vector<double>> controls;
 
   std::string line;
 
@@ -57,7 +57,7 @@ std::vector<Controls> ControlReader::read(std::istream& input)
     {
       for(const auto& token : tokens)
       {
-        controls.push_back(Controls{std::stod(token)});
+        controls.push_back(std::vector<double>{std::stod(token)});
       }
 
       first_line = false;
@@ -76,8 +76,21 @@ std::vector<Controls> ControlReader::read(std::istream& input)
     }
   }
 
-  Log(info) << "Read in controls with dimension " << controls.size()
-            << ", size " << controls[0].size();
+  const idx dimension = controls.size();
+  const idx num_cells = controls[0].size();
 
-  return controls;
+  Log(info) << "Read in controls with dimension " << dimension
+            << ", size " << num_cells;
+
+  FractionalControls fractional_controls(num_cells, dimension);
+
+  for(idx k = 0; k < num_cells; ++k)
+  {
+    for(idx i = 0; i < dimension; ++i)
+    {
+      fractional_controls(k, i) = controls.at(i).at(k);
+    }
+  }
+
+  return fractional_controls;
 }

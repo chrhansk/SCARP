@@ -70,9 +70,9 @@ void ProgramTest::execute_all(const fs::path& result_path)
 
     fs::ifstream instance_input{instance_path};
 
-    std::vector<Controls> fractional_controls = ControlReader().read(instance_input);
+    FractionalControls fractional_controls = ControlReader().read(instance_input);
 
-    const idx dimension = fractional_controls.size();
+    const idx dimension = fractional_controls.dimension();
 
     std::vector<double> switch_on_costs = default_switch_on_costs(dimension);
 

@@ -3,29 +3,72 @@
 
 #include <vector>
 
+#include "matrix.hh"
 #include "cmp.hh"
 #include "util.hh"
 
-typedef std::vector<double> Controls;
+// typedef std::vector<double> Controls;
 
-double control_distance(const std::vector<Controls>& first,
-                        const std::vector<Controls>& second);
+class Controls
+{
+public:
 
-double control_costs(const std::vector<Controls>& controls,
-                     const std::vector<double>& switch_on_costs,
-                     const std::vector<double>& switch_off_costs);
+  // i: cell index
+  // j: control index
+  virtual double operator()(idx i, idx j) const = 0;
 
+  virtual const idx num_cells() const = 0;
+  virtual const idx dimension() const = 0;
+
+  bool are_convex(double eps = cmp::eps) const;
+  bool are_integral(double eps = cmp::eps) const;
+
+  bool satisfy_vanishing_constraints(const Controls& fractional_controls,
+                                     double eps = cmp::eps) const;
+
+  double distance(const Controls& other) const;
+
+};
+
+class FractionalControls : public Controls
+{
+private:
+  Matrix<double> fractional_controls;
+public:
+  FractionalControls(idx num_cells, idx dimension);
+
+  double operator()(idx i, idx j) const override;
+  double& operator()(idx i, idx j);
+
+  const Matrix<double>& values() const
+  {
+    return fractional_controls;
+  }
+
+  const idx num_cells() const override;
+  const idx dimension() const override;
+};
+
+class BinaryControls : public Controls
+{
+private:
+  std::vector<idx> binary_controls;
+  idx dim;
+
+public:
+  // constructor
+  BinaryControls(std::vector<idx>& control_values,
+                 idx dimension);
+
+  std::vector<idx>& values();
+  const std::vector<idx>& values() const;
+
+  double operator()(idx i, idx j) const override;
+
+  const idx num_cells() const override;
+  const idx dimension() const override;
+};
 
 double max_control_deviation(idx dimension);
-
-bool controls_are_integral(const std::vector<Controls>& controls,
-                           double eps = cmp::eps);
-
-bool controls_are_convex(const std::vector<Controls>& controls,
-                         double eps = cmp::eps);
-
-bool controls_satisfy_vanishing_constraints(const std::vector<Controls>& controls,
-                                            const std::vector<Controls>& fractional_controls,
-                                            double eps = cmp::eps);
 
 #endif /* CONTROLS_HH */

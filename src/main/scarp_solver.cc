@@ -69,12 +69,12 @@ int main(int argc, char **argv)
 
   auto controls = ControlReader().read(input);
 
-  const idx dimension = controls.size();
+  const idx dimension = controls.dimension();
 
   std::vector<double> switch_on_costs = default_switch_on_costs(dimension);
   std::vector<double> switch_off_costs = default_switch_off_costs(dimension);
 
-  std::vector<std::vector<Controls>> all_controls;
+  std::vector<BinaryControls> all_controls;
 
   if(sur_costs)
   {

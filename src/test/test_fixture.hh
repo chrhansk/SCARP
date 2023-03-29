@@ -12,7 +12,7 @@ namespace fs = boost::filesystem;
 class ProgramTest
 {
 protected:
-  virtual double execute(const std::vector<Controls>& controls,
+  virtual double execute(const FractionalControls& fractional_controls,
                          const CostFunction& costs) = 0;
 
 public:

@@ -66,11 +66,11 @@ int main(int argc, char **argv)
 
   auto fractional_controls = ControlReader().read(input);
 
-  const idx dimension = fractional_controls.size();
+  const idx dimension = fractional_controls.dimension();
 
-  std::vector<Controls> sur_controls = compute_sur_controls(fractional_controls,
-                                                            vanishing_constraints,
-                                                            1e-3);
+  BinaryControls sur_controls = compute_sur_controls(fractional_controls,
+                                                     vanishing_constraints,
+                                                     1e-3);
 
   std::vector<double> switch_on_costs = default_switch_on_costs(dimension);
   std::vector<double> switch_off_costs = default_switch_off_costs(dimension);

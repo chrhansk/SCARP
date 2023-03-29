@@ -7,7 +7,7 @@
 #include "log.hh"
 
 
-SCARPProgram::SCARPProgram(const std::vector<Controls>& fractional_controls,
+SCARPProgram::SCARPProgram(const Controls& fractional_controls,
                            const CostFunction& costs,
                            double scale_factor,
                            bool vanishing_constraints)
@@ -16,13 +16,13 @@ SCARPProgram::SCARPProgram(const std::vector<Controls>& fractional_controls,
     num_expansions(0),
     fractional_controls(fractional_controls),
     vanishing_constraints(vanishing_constraints),
-    size(fractional_controls.begin()->size()),
-    dimension(fractional_controls.size()),
+    size(fractional_controls.num_cells()),
+    dimension(fractional_controls.dimension()),
     max_deviation(scale_factor*max_control_deviation(dimension)),
     fractional_sum(dimension, 0.),
     iteration(0)
 {
-  assert(controls_are_convex(fractional_controls, 1e-3));
+  assert(fractional_controls.are_convex());
 
   Log(debug) << "Max deviation: " << max_deviation;
 }
@@ -50,8 +50,7 @@ void SCARPProgram::create_initial_labels()
 
   for(idx i = 0; i < dimension; ++i)
   {
-    const double initial_cost =
-      costs.initial_costs(i, fractional_controls.at(i).at(0));
+    const double initial_cost = costs.initial_costs(i, fractional_controls(0, i));
 
     next_front().push_back(LabelSet());
 
@@ -115,12 +114,11 @@ void SCARPProgram::expand_label(SCARPLabelPtr label)
   }
 }
 
-std::vector<Controls>
+BinaryControls
 SCARPProgram::get_controls(SCARPLabelPtr label) const
 {
-  std::vector<Controls> controls(dimension, Controls{});
-
   std::vector<idx> control_values;
+  control_values.reserve(size);
 
   while(label)
   {
@@ -128,20 +126,10 @@ SCARPProgram::get_controls(SCARPLabelPtr label) const
     label = label->get_predecessor();
   }
 
-  std::reverse(std::begin(control_values), std::end(control_values));
+  std::reverse(control_values.begin(), control_values.end());
 
-  for(const auto& value : control_values)
-  {
-    assert(value >= 0);
-    assert(value < dimension);
-
-    for(idx i = 0; i < dimension; ++i)
-    {
-      controls[i].push_back(value == i);
-    }
-  }
-
-  return controls;
+  return BinaryControls(control_values,
+                        dimension);
 }
 
 void SCARPProgram::expand_labels()
@@ -198,7 +186,7 @@ bool SCARPProgram::is_feasible(const SCARPLabel& label) const
   {
     const idx i = label.get_current_control();
 
-    double control_value = fractional_controls.at(i).at(iteration);
+    double control_value = fractional_controls(iteration, i);
 
     if(cmp::zero(control_value))
     {
@@ -219,11 +207,27 @@ bool SCARPProgram::is_feasible(const SCARPLabel& label) const
   return true;
 }
 
-bool SCARPProgram::is_feasible(const std::vector<Controls>& actual_controls) const
+bool SCARPProgram::is_feasible(const BinaryControls& actual_controls) const
 {
-  return cmp::le(control_distance(actual_controls, fractional_controls), max_deviation) &&
-    controls_are_integral(actual_controls) &&
-    controls_are_convex(actual_controls);
+  if (!(actual_controls.are_integral() && actual_controls.are_convex()))
+  {
+    return false;
+  }
+
+  const idx num_cells = actual_controls.num_cells();
+
+  FractionalControls partial_controls(num_cells,
+                                      dimension);
+
+  for(idx k = 0; k < num_cells; ++k)
+  {
+    for(idx i = 0; i < dimension; ++i)
+    {
+      partial_controls(k, i) = fractional_controls(k, i);
+    }
+  }
+
+  return cmp::le(actual_controls.distance(partial_controls), max_deviation);
 }
 
 void SCARPProgram::expand_all()
@@ -239,7 +243,7 @@ void SCARPProgram::expand_all()
 
   for(idx i = 0; i < dimension; ++i)
   {
-    fractional_sum.at(i) = fractional_controls[i][0];
+    fractional_sum.at(i) = fractional_controls(0, i);
   }
 
   create_initial_labels();
@@ -250,7 +254,7 @@ void SCARPProgram::expand_all()
 
     for(idx i = 0; i < dimension; ++i)
     {
-      fractional_sum.at(i) += fractional_controls[i][iteration];
+      fractional_sum.at(i) += fractional_controls(iteration, i);
     }
 
     expand_labels();
@@ -269,7 +273,7 @@ void SCARPProgram::expand_all()
   }
 }
 
-std::vector<Controls> SCARPProgram::solve()
+BinaryControls SCARPProgram::solve()
 {
   expand_all();
 
@@ -292,8 +296,8 @@ std::vector<Controls> SCARPProgram::solve()
 
   auto min_controls = get_controls(min_label);
 
-  assert(dimension == min_controls.size());
-  assert(size == min_controls.front().size());
+  assert(dimension == min_controls.dimension());
+  assert(size == min_controls.num_cells());
 
   assert(is_feasible(min_controls));
 
@@ -308,7 +312,7 @@ std::vector<Controls> SCARPProgram::solve()
   {
     if(vanishing_constraints)
     {
-      assert(controls_satisfy_vanishing_constraints(min_controls, fractional_controls));
+      assert(min_controls.satisfy_vanishing_constraints(fractional_controls));
     }
 
     const double total_costs = costs.total_cost(min_controls, fractional_controls);
@@ -321,7 +325,7 @@ std::vector<Controls> SCARPProgram::solve()
   return min_controls;
 }
 
-std::vector<std::vector<Controls>> SCARPProgram::solve_all()
+std::vector<BinaryControls> SCARPProgram::solve_all()
 {
   expand_all();
 
@@ -340,7 +344,7 @@ std::vector<std::vector<Controls>> SCARPProgram::solve_all()
     }
   }
 
-  std::vector<std::vector<Controls>> all_controls;
+  std::vector<BinaryControls> all_controls;
 
   for (idx i = 0; i < dimension; ++i)
   {
@@ -359,13 +363,13 @@ std::vector<std::vector<Controls>> SCARPProgram::solve_all()
       {
         if(vanishing_constraints)
         {
-          assert(controls_satisfy_vanishing_constraints(min_controls, fractional_controls));
+          assert(min_controls.satisfy_vanishing_constraints(fractional_controls));
         }
       }
 
 
-      assert(dimension == min_controls.size());
-      assert(size == min_controls.front().size());
+      assert(dimension == min_controls.dimension());
+      assert(size == min_controls.num_cells());
 
       assert(is_feasible(min_controls));
 

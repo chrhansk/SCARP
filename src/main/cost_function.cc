@@ -2,19 +2,19 @@
 
 #include <stdexcept>
 
-double CostFunction::total_cost(const std::vector<Controls>& controls,
-                                const std::vector<Controls>& fractional_controls) const
+double CostFunction::total_cost(const Controls& controls,
+                                const Controls& fractional_controls) const
 {
-  const idx size = fractional_controls.front().size();
-  const idx dimension = fractional_controls.size();
+  const idx n = controls.num_cells();
+  const idx m = controls.dimension();
 
-  std::vector<double> fractional_control_sums(dimension, 0.);
+  std::vector<double> fractional_control_sums(m, 0.);
 
   auto control_at = [&](idx j) -> idx
     {
-      for(idx i = 0; i < dimension; ++i)
+      for(idx i = 0; i < m; ++i)
       {
-        if(controls.at(i).at(j) == 1)
+        if(controls(j, i) == 1.)
         {
           return i;
         }
@@ -27,26 +27,26 @@ double CostFunction::total_cost(const std::vector<Controls>& controls,
 
   auto add_fractional_controls = [&](idx j)
     {
-      for(idx i = 0; i < dimension; ++i)
+      for(idx i = 0; i < m; ++i)
       {
-        fractional_control_sums.at(i) += fractional_controls.at(i).at(j);
+        fractional_control_sums.at(i) += fractional_controls(j, i);
       }
     };
 
   idx initial_control = control_at(0);
 
   double total_cost = initial_costs(initial_control,
-                                    fractional_controls.at(initial_control).at(0));
+                                    fractional_controls(0, initial_control));
 
   idx previous_control = initial_control;
 
-  std::vector<idx> control_sums(dimension, 0);
+  std::vector<idx> control_sums(m, 0);
 
   control_sums.at(initial_control)++;
 
   add_fractional_controls(0);
 
-  for(idx j = 1; j < size; ++j)
+  for(idx j = 1; j < n; ++j)
   {
     idx next_control = control_at(j);
 

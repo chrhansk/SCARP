@@ -1,29 +1,71 @@
 #include "controls.hh"
 
+#include <cassert>
 #include <cmath>
 
-double control_distance(const std::vector<Controls>& first_controls,
-                        const std::vector<Controls>& second_controls)
+bool Controls::are_convex(double eps) const
 {
-  const idx size = first_controls.front().size();
-  const idx dimension = first_controls.size();
+  for(idx i = 0; i < num_cells(); ++i)
+  {
+    double control_sum = 0.;
 
-  std::vector<double> first_sum(dimension, 0.);
-  std::vector<double> second_sum(dimension, 0.);
+    for(idx j = 0; j < dimension(); ++j)
+    {
+      control_sum += (*this)(i, j);
+    }
+
+    if(!cmp::eq(control_sum, 1., eps))
+    {
+      return false;
+    }
+  }
+
+  return  true;
+}
+
+bool Controls::are_integral(double eps) const
+{
+  const idx n = num_cells();
+  const idx m = dimension();
+
+  for(idx k = 0; k < n; ++k)
+  {
+    for(idx i = 0; i < m; ++i)
+    {
+      if(!cmp::integral((*this)(k, i), eps))
+      {
+        return false;
+      }
+    }
+  }
+
+  return true;
+}
+
+double Controls::distance(const Controls& other) const
+{
+  assert(num_cells() == other.num_cells());
+  assert(dimension() == other.dimension());
 
   double max_deviation = -inf;
 
-  for(idx k = 0; k < size; ++k)
+  const idx n = num_cells();
+  const idx m = dimension();
+
+  std::vector<double> sum(m, 0.);
+  std::vector<double> other_sum(m, 0.);
+
+  for(idx j = 0; j < n; ++j)
   {
-    for(idx i = 0; i < dimension; ++i)
+    for(idx i = 0; i < m; ++i)
     {
-      first_sum.at(i) += first_controls[i][k];
-      second_sum.at(i) += second_controls[i][k];
+      sum.at(i) += (*this)(j, i);
+      other_sum.at(i) += other(j, i);
     }
 
-    for(idx i = 0; i < dimension; ++i)
+    for(idx i = 0; i < m; ++i)
     {
-      double deviation = std::fabs(first_sum.at(i) - second_sum.at(i));
+      double deviation = std::fabs(sum.at(i) - other_sum.at(i));
 
       if(deviation > max_deviation)
       {
@@ -35,44 +77,74 @@ double control_distance(const std::vector<Controls>& first_controls,
   return max_deviation;
 }
 
-double control_costs(const std::vector<Controls>& controls,
-                     const std::vector<double>& switch_on_costs,
-                     const std::vector<double>& switch_off_costs)
+bool Controls::satisfy_vanishing_constraints(const Controls& fractional_controls,
+                                             double eps) const
 {
-  const idx size = controls.front().size();
-  const idx dimension = controls.size();
+  const idx n = num_cells();
+  const idx m = dimension();
 
-  double costs = 0.;
-  idx current_control = 0;
-
-  for(idx i = 0; i < dimension; ++i)
+  for(idx k = 0; k < n; ++k)
   {
-    if(controls[i][0] > 0)
+    for(idx i = 0; i < m; ++i)
     {
-      current_control = i;
-      costs += switch_on_costs.at(i);
-      break;
-    }
-  }
-
-  for(idx k = 0; k < size; ++k)
-  {
-    for(idx i = 0; i < dimension; ++i)
-    {
-      if(controls[i][k] > 0 && i != current_control)
+      if(cmp::zero(fractional_controls(k, i), eps) &&
+         !cmp::zero((*this)(k, i), eps))
       {
-        costs += switch_on_costs.at(i) + switch_off_costs.at(current_control);
-
-        current_control = i;
-
-        break;
+        return false;
       }
     }
   }
 
-  costs += switch_off_costs.at(current_control);
+  return true;
+}
 
-  return costs;
+
+FractionalControls::FractionalControls(idx num_cells, idx dimension)
+  : fractional_controls(num_cells, dimension)
+{
+
+}
+
+double FractionalControls::operator()(idx i, idx j) const
+{
+  return fractional_controls(i, j);
+}
+
+double& FractionalControls::operator()(idx i, idx j)
+{
+  return fractional_controls(i, j);
+}
+
+const idx FractionalControls::num_cells() const
+{
+  return fractional_controls.num_rows();
+}
+
+const idx FractionalControls::dimension() const
+{
+  return fractional_controls.num_cols();
+}
+
+BinaryControls::BinaryControls(std::vector<idx>& binary_controls,
+                               idx dimension)
+  : binary_controls(binary_controls),
+    dim(dimension)
+{
+}
+
+double BinaryControls::operator()(idx i, idx j) const
+{
+  return binary_controls[i] == j;
+}
+
+const idx BinaryControls::num_cells() const
+{
+  return binary_controls.size();
+}
+
+const idx BinaryControls::dimension() const
+{
+  return dim;
 }
 
 double max_control_deviation(idx dimension)
@@ -85,70 +157,4 @@ double max_control_deviation(idx dimension)
   }
 
   return max_deviation;
-}
-
-bool controls_are_integral(const std::vector<Controls>& controls,
-                           double eps)
-{
-  const idx size = controls.front().size();
-  const idx dimension = controls.size();
-
-  for(idx k = 0; k < size; ++k)
-  {
-    for(idx i = 0; i < dimension; ++i)
-    {
-      if(!cmp::integral(controls[i][k], eps))
-      {
-        return false;
-      }
-    }
-  }
-
-  return true;
-}
-
-bool controls_are_convex(const std::vector<Controls>& controls,
-                         double eps)
-{
-  const idx size = controls.front().size();
-  const idx dimension = controls.size();
-
-  for(idx k = 0; k < size; ++k)
-  {
-    double control_sum = 0.;
-
-    for(idx i = 0; i < dimension; ++i)
-    {
-      control_sum += controls[i][k];
-    }
-
-    if(!cmp::eq(control_sum, 1., eps))
-    {
-      return false;
-    }
-  }
-
-  return true;
-}
-
-bool controls_satisfy_vanishing_constraints(const std::vector<Controls>& controls,
-                                            const std::vector<Controls>& fractional_controls,
-                                            double eps)
-{
-  const idx size = controls.front().size();
-  const idx dimension = controls.size();
-
-  for(idx k = 0; k < size; ++k)
-  {
-    for(idx i = 0; i < dimension; ++i)
-    {
-      if(cmp::zero(fractional_controls[i][k], eps) &&
-         !cmp::zero(controls[i][k], eps))
-      {
-        return false;
-      }
-    }
-  }
-
-  return true;
 }

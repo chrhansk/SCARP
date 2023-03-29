@@ -9,7 +9,7 @@
 class ControlReader
 {
 public:
-  std::vector<Controls> read(std::istream& input);
+  FractionalControls read(std::istream& input);
 };
 
 

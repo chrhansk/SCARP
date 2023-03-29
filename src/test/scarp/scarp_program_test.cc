@@ -20,7 +20,7 @@ private:
   double scale_factor;
 
 protected:
-  virtual double execute(const std::vector<Controls>& controls,
+  virtual double execute(const FractionalControls& fractional_controls,
                          const CostFunction& costs) override;
 
 public:
@@ -29,10 +29,10 @@ public:
   {}
 };
 
-double SCARPProgramTest::execute(const std::vector<Controls>& fractional_controls,
+double SCARPProgramTest::execute(const FractionalControls& fractional_controls,
                                  const CostFunction& costs)
 {
-  const idx dimension = fractional_controls.size();
+  const idx dimension = fractional_controls.dimension();
 
   SCARPProgram program(fractional_controls,
                        costs,

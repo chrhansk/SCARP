@@ -19,8 +19,8 @@ public:
                             idx next_control,
                             const std::vector<double>& fractional_control_sums) const = 0;
 
-  double total_cost(const std::vector<Controls>& controls,
-                    const std::vector<Controls>& fractional_controls) const;
+  double total_cost(const Controls& controls,
+                    const Controls& fractional_controls) const;
 
 };
 

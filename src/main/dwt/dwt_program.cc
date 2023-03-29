@@ -2,16 +2,14 @@
 
 #include "log.hh"
 
-DWTProgram::DWTProgram(const std::vector<Controls>& fractional_controls,
-                       const std::vector<double>& switch_on_costs,
-                       const std::vector<double>& switch_off_costs,
+DWTProgram::DWTProgram(const Controls& fractional_controls,
+                       const CostFunction& costs,
                        const std::vector<idx>& minimum_dwt,
                        double scale_factor)
-  : fractional_controls(fractional_controls),
-    switch_on_costs(switch_on_costs),
-    switch_off_costs(switch_off_costs),
-    size(fractional_controls.begin()->size()),
-    dimension(fractional_controls.size()),
+  : costs(costs),
+    fractional_controls(fractional_controls),
+    size(fractional_controls.num_cells()),
+    dimension(fractional_controls.dimension()),
     minimum_dwt(minimum_dwt),
     max_deviation(scale_factor*max_control_deviation(dimension)),
     fractional_sum(dimension, 0.),
@@ -58,7 +56,7 @@ void DWTProgram::create_initial_labels()
 
   for(idx i = 0; i < dimension; ++i)
   {
-    double cost = switch_on_costs.at(i);
+    const double initial_cost = costs.initial_costs(i, fractional_controls(0, i));
 
     next_front().push_back(LabelMap());
 
@@ -66,7 +64,7 @@ void DWTProgram::create_initial_labels()
 
     auto label = std::make_shared<DWTLabel>(i,
                                             dimension,
-                                            cost,
+                                            initial_cost,
                                             remaining_dwt);
 
     if(is_feasible(*label))
@@ -108,7 +106,6 @@ void DWTProgram::expand_label(DWTLabelPtr label)
 {
   for(idx next_control = 0; next_control < dimension; ++next_control)
   {
-    double cost_increase = 0.;
     idx remaining_dwt = label->get_remaining_dwt();
 
     if(label->get_current_control() != next_control)
@@ -120,8 +117,6 @@ void DWTProgram::expand_label(DWTLabelPtr label)
 
       remaining_dwt = minimum_dwt.at(next_control);
 
-      cost_increase = switch_on_costs.at(next_control) +
-        switch_off_costs.at(label->get_current_control());
     }
     else
     {
@@ -131,8 +126,13 @@ void DWTProgram::expand_label(DWTLabelPtr label)
       }
     }
 
+
+    double next_cost = costs(*label,
+                             next_control,
+                             fractional_sum);
+
     auto next_label = std::make_shared<DWTLabel>(next_control,
-                                                 cost_increase,
+                                                 next_cost,
                                                  label,
                                                  remaining_dwt);
 
@@ -161,11 +161,9 @@ void DWTProgram::expand_label(DWTLabelPtr label)
   }
 }
 
-std::vector<Controls>
+BinaryControls
 DWTProgram::get_controls(DWTLabelPtr label) const
 {
-  std::vector<Controls> controls(dimension, Controls{});
-
   std::vector<idx> control_values;
 
   while(label)
@@ -176,25 +174,15 @@ DWTProgram::get_controls(DWTLabelPtr label) const
 
   std::reverse(std::begin(control_values), std::end(control_values));
 
-  for(const auto& value : control_values)
-  {
-    assert(value >= 0);
-    assert(value < dimension);
 
-    for(idx i = 0; i < dimension; ++i)
-    {
-      controls[i].push_back(value == i);
-    }
-  }
-
-  return controls;
+  return BinaryControls(control_values, dimension);
 }
 
-std::vector<Controls> DWTProgram::solve()
+BinaryControls DWTProgram::solve()
 {
   for(idx i = 0; i < dimension; ++i)
   {
-    fractional_sum.at(i) = fractional_controls[i][0];
+    fractional_sum.at(i) = fractional_controls(0, i);
   }
 
   create_initial_labels();
@@ -205,7 +193,7 @@ std::vector<Controls> DWTProgram::solve()
 
     for(idx i = 0; i < dimension; ++i)
     {
-      fractional_sum.at(i) += fractional_controls[i][iteration];
+      fractional_sum.at(i) += fractional_controls(iteration, i);
     }
 
     expand_labels();
@@ -234,9 +222,7 @@ std::vector<Controls> DWTProgram::solve()
 
       for(const auto& label : label_set.get_labels())
       {
-
-        double total_cost = label->get_cost() +
-          switch_off_costs.at(label->get_current_control());
+        double total_cost = costs.final_costs(*label);
 
         if(total_cost < min_cost)
         {
@@ -256,9 +242,8 @@ std::vector<Controls> DWTProgram::solve()
 
   Log(info) << "Min cost: " << min_cost;
 
-  Log(info) << "Costs according to controls: " << control_costs(min_controls,
-                                                                switch_on_costs,
-                                                                switch_off_costs);
+  Log(info) << "Costs according to controls: " << costs.total_cost(min_controls,
+                                                                   fractional_controls);
 
   return min_controls;
 }

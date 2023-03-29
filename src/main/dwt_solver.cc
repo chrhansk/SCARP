@@ -64,9 +64,10 @@ int main(int argc, char **argv)
 
   std::vector<idx> minimum_dwt{2, 2, 0};
 
+  SwitchCosts switch_costs(switch_on_costs, switch_off_costs);
+
   DWTProgram program(controls,
-                     switch_on_costs,
-                     switch_off_costs,
+                     switch_costs,
                      minimum_dwt,
                      scale_factor);
 

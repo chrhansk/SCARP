@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
 
   auto fractional_controls = ControlReader().read(fractional_input);
 
-  if(!controls_are_convex(fractional_controls))
+  if(!fractional_controls.are_convex())
   {
     Log(error) << "Fractional controls are not convex";
   }
@@ -63,21 +63,21 @@ int main(int argc, char *argv[])
 
   auto integral_controls = ControlReader().read(integral_input);
 
-  if(!controls_are_convex(integral_controls))
+  if(!(integral_controls.are_convex()))
   {
     Log(error) << "Integral controls are not convex";
   }
 
-  if(!controls_are_integral(integral_controls))
+  if(!integral_controls.are_integral())
   {
     Log(error) << "Integral controls are not integral";
   }
 
-  const idx fractional_size = fractional_controls.front().size();
-  const idx fractional_dimension = fractional_controls.size();
+  const idx fractional_size = fractional_controls.num_cells();
+  const idx fractional_dimension = fractional_controls.dimension();
 
-  const idx integral_size = integral_controls.front().size();
-  const idx integral_dimension = integral_controls.size();
+  const idx integral_size = integral_controls.num_cells();
+  const idx integral_dimension = integral_controls.dimension();
 
   if(integral_size != fractional_size)
   {
@@ -93,8 +93,7 @@ int main(int argc, char *argv[])
 
   deviation *= scale_factor;
 
-  const double distance = control_distance(fractional_controls,
-                                           integral_controls);
+  const double distance = fractional_controls.distance(integral_controls);
 
   if(!cmp::le(distance, deviation))
   {
