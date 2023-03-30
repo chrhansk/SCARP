@@ -60,8 +60,15 @@ public:
   BinaryControls(std::vector<idx>& control_values,
                  idx dimension);
 
-  std::vector<idx>& values();
-  const std::vector<idx>& values() const;
+  std::vector<idx>& values()
+  {
+    return binary_controls;
+  }
+
+  const std::vector<idx>& values() const
+  {
+    return binary_controls;
+  }
 
   double operator()(idx i, idx j) const override;
 
