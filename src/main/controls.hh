@@ -1,6 +1,7 @@
 #ifndef CONTROLS_HH
 #define CONTROLS_HH
 
+#include <cassert>
 #include <vector>
 
 #include "matrix.hh"
@@ -26,9 +27,55 @@ public:
   bool satisfy_vanishing_constraints(const Controls& fractional_controls,
                                      double eps = cmp::eps) const;
 
+  // simple distance on uniform grid
   double distance(const Controls& other) const;
 
+  // adaptive distance
+  template<class T>
+  double distance(const Controls& other,
+                  const std::vector<T>& cell_volumes) const;
+
 };
+
+template<class T>
+double Controls::distance(const Controls& other,
+                          const std::vector<T>& cell_volumes) const
+{
+  assert(num_cells() == other.num_cells());
+  assert(dimension() == other.dimension());
+  assert(num_cells() == cell_volumes.size());
+
+  double max_deviation = -inf;
+
+  const idx n = num_cells();
+  const idx m = dimension();
+
+  std::vector<double> sum(m, 0.);
+  std::vector<double> other_sum(m, 0.);
+
+  for(idx j = 0; j < n; ++j)
+  {
+    const T cell_volume = cell_volumes[j];
+
+    for(idx i = 0; i < m; ++i)
+    {
+      sum.at(i) += cell_volume * (*this)(j, i);
+      other_sum.at(i) += cell_volume * other(j, i);
+    }
+
+    for(idx i = 0; i < m; ++i)
+    {
+      double deviation = std::fabs(sum.at(i) - other_sum.at(i));
+
+      if(deviation > max_deviation)
+      {
+        max_deviation = deviation;
+      }
+    }
+  }
+
+  return max_deviation;
+}
 
 class FractionalControls : public Controls
 {

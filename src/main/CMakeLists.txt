@@ -7,7 +7,8 @@ set(COMMON_SRC
   cost_function.cc
   log.cc
   parameters.cc
-  scarp/scarp_program.cc
+  #scarp/adaptive_program.cc
+  scarp/uniform_program.cc
   dwt/dwt_program.cc
   sur/sur.cc
   util.cc)

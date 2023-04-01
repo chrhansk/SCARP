@@ -52,7 +52,8 @@ int main(int argc, char *argv[])
 
   std::ifstream fractional_input(fractional_name);
 
-  auto fractional_controls = ControlReader().read(fractional_input);
+  auto frac_read_result = ControlReader().read_uniform(fractional_input);
+  FractionalControls fractional_controls = frac_read_result.fractional_controls;
 
   if(!fractional_controls.are_convex())
   {
@@ -61,7 +62,8 @@ int main(int argc, char *argv[])
 
   std::ifstream integral_input(integral_name);
 
-  auto integral_controls = ControlReader().read(integral_input);
+  auto int_read_result = ControlReader().read_uniform(integral_input);
+  FractionalControls integral_controls = int_read_result.fractional_controls;
 
   if(!(integral_controls.are_convex()))
   {

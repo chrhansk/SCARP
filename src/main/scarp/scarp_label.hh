@@ -6,36 +6,45 @@
 #include "label.hh"
 #include "util.hh"
 
-class SCARPLabel;
+template <class T>
+class GenSCARPLabel;
 
-typedef std::shared_ptr<SCARPLabel> SCARPLabelPtr;
 
-class SCARPLabel : public Label
+template <class T> using GenSCARPLabelPtr = std::shared_ptr<GenSCARPLabel<T>>;
+
+template<class T>
+class GenSCARPLabel : public GenLabel<T>
 {
 private:
-  SCARPLabelPtr predecessor;
+  GenSCARPLabelPtr<T> predecessor;
+
+  using GenLabel<T>::control_sums;
+  using GenLabel<T>::current_control;
+  using GenLabel<T>::cost;
 
 public:
-  SCARPLabel(idx current_control,
-             double cost,
-             SCARPLabelPtr predecessor)
+  GenSCARPLabel(idx current_control,
+                double cost,
+                GenSCARPLabelPtr<T> predecessor,
+                T curr_volume = T(1))
     : Label(predecessor->get_control_sums(),
             current_control,
             cost),
       predecessor(predecessor)
   {
-    control_sums.at(current_control)++;
+    control_sums.at(current_control) += curr_volume;
   }
 
-  SCARPLabel(idx current_control,
-             idx dimension,
-             double cost)
-    : Label(std::vector<idx>(dimension, 0), current_control, cost)
+  GenSCARPLabel(idx curr_control,
+                idx dimension,
+                double cost,
+                T curr_volume = T(1))
+    : Label(std::vector<T>(dimension, (T) 0), curr_control, cost)
   {
-    control_sums.at(current_control)++;
+    control_sums.at(curr_control) += curr_volume;
   }
 
-  void replace(const SCARPLabel& other)
+  void replace(const GenSCARPLabel<T>& other)
   {
     control_sums = other.get_control_sums();
     current_control = other.get_current_control();
@@ -43,26 +52,7 @@ public:
     predecessor = other.get_predecessor();
   }
 
-  bool operator==(const SCARPLabel& other) const
-  {
-    return (control_sums == other.control_sums) &&
-      (current_control == other.current_control);
-  }
-
-  bool operator<(const SCARPLabel& other) const
-  {
-    for(idx i = 0; i < control_sums.size(); ++i)
-    {
-      if(control_sums[i] != other.control_sums[i])
-      {
-        return control_sums[i] < other.control_sums[i];
-      }
-    }
-
-    return current_control < other.current_control;
-  }
-
-  SCARPLabelPtr get_predecessor() const
+  GenSCARPLabelPtr<T> get_predecessor() const
   {
     return predecessor;
   }
@@ -70,10 +60,10 @@ public:
 
 namespace std
 {
-  template<>
-  struct hash<SCARPLabel>
+  template<class T>
+  struct hash<GenSCARPLabel<T>>
   {
-    std::size_t operator()(const SCARPLabel& label) const
+    std::size_t operator()(const GenSCARPLabel<T>& label) const
     {
       std::size_t seed = 0;
 
@@ -88,34 +78,61 @@ namespace std
   };
 }
 
-struct SCARPLabelHash
+
+template<class T>
+struct GenSCARPLabelHash
 {
-  std::size_t operator()(const SCARPLabelPtr& label) const
+  std::size_t operator()(const GenSCARPLabelPtr<T>& label) const
   {
     assert(label);
-    return std::hash<SCARPLabel>()(*label);
+    return std::hash<GenSCARPLabel<T>>()(*label);
   }
 };
 
-struct SCARPLabelOrdering
+template<class T>
+struct GenSCARPLabelOrdering
 {
-  std::size_t operator()(const SCARPLabelPtr& first,
-                         const SCARPLabelPtr& second) const
+  std::size_t operator()(const GenSCARPLabelPtr<T>& first,
+                         const GenSCARPLabelPtr<T>& second) const
   {
     assert(first);
     assert(second);
 
-    return *first < *second;
+    const auto& my_sums = first->get_control_sums();
+    const auto& other_sums = second->get_control_sums();
+
+    assert(my_sums.size() == other_sums.size());
+
+    const idx size = my_sums.size();
+
+    for(idx i = 0; i < size; ++i)
+    {
+      if(my_sums[i] != other_sums[i])
+      {
+        return my_sums[i] < other_sums[i];
+      }
+    }
+
+    return false;
   }
 };
 
-struct SCARPLabelComparator
+template<class T>
+struct GenSCARPLabelComparator
 {
-  bool operator()(const SCARPLabelPtr& first,
-                  const SCARPLabelPtr& second) const
+  bool operator()(const GenSCARPLabelPtr<T>& first,
+                  const GenSCARPLabelPtr<T>& second) const
   {
-    return *first == *second;
+    assert(first);
+    assert(second);
+
+    return first->get_control_sums() == second->get_control_sums();
   }
 };
+
+typedef GenSCARPLabel<idx> SCARPLabel;
+typedef GenSCARPLabelPtr<idx> SCARPLabelPtr;
+typedef GenSCARPLabelHash<idx> SCARPLabelHash;
+typedef GenSCARPLabelComparator<idx> SCARPLabelComparator;
 
 #endif /* SCARP_LABEL_HH */

@@ -9,59 +9,22 @@
 
 #include "parameters.hh"
 
+#include "csv_reader.hh"
 #include "control_reader.hh"
 
 #include "cmp.hh"
 
 void ProgramTest::execute_all(const fs::path& result_path)
 {
-  auto split_string = [](const std::string& line)
-    -> std::vector<std::string>
-    {
-      std::vector<std::string> entries;
-
-      boost::split(entries, line, boost::is_any_of(" "));
-
-      for(auto& entry : entries)
-      {
-        boost::algorithm::trim(entry);
-      }
-
-      return entries;
-    };
-
-  auto read_header = [&](const std::string& line)
-    -> std::map<std::string, int>
-    {
-      std::map<std::string, int> fields;
-
-      std::vector<std::string> entries = split_string(line);
-
-      int i = 0;
-
-      for(auto& entry : entries)
-      {
-        fields.insert({entry, i++});
-      }
-
-      return fields;
-    };
-
   fs::ifstream input{result_path};
 
-  std::string line;
+  CSVReader reader(input);
 
-  std::getline(input, line);
+  const int name_field = reader.field("Name");
+  const int cost_field = reader.field("SCARP");
 
-  auto fields = read_header(line);
-
-  const int name_field = fields.at("Name");
-  const int cost_field = fields.at("SCARP");
-
-  while(std::getline(input, line))
+  for(const auto& row : reader.get_lines())
   {
-    auto row = split_string(line);
-
     auto instance_name = row.at(name_field);
 
     double expected = std::stof(row.at(cost_field));
@@ -70,7 +33,8 @@ void ProgramTest::execute_all(const fs::path& result_path)
 
     fs::ifstream instance_input{instance_path};
 
-    FractionalControls fractional_controls = ControlReader().read(instance_input);
+    auto read_result = ControlReader().read_uniform(instance_input);
+    FractionalControls fractional_controls = read_result.fractional_controls;
 
     const idx dimension = fractional_controls.dimension();
 

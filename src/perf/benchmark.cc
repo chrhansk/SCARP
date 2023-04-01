@@ -80,7 +80,7 @@ void Benchmark::execute_all(int argc, char** argv)
   {
     fs::ifstream input{current_path};
 
-    auto fractional_controls = ControlReader().read(input);
+    auto fractional_controls = ControlReader().read_uniform(input);
 
     const int n = 100;
 

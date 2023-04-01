@@ -1,6 +1,7 @@
 add_custom_target(build_tests)
 
 set(TEST_COMMON_SRC
+  csv_reader.cc
   test_fixture.cc)
 
 add_library(test_common ${TEST_COMMON_SRC})
@@ -23,4 +24,5 @@ endfunction()
 
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}")
 
-add_unit_test(scarp/scarp_program_test)
+add_unit_test(scarp/uniform_program_test)
+add_unit_test(scarp/adaptive_program_test)

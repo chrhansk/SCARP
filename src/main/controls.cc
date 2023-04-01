@@ -1,6 +1,5 @@
 #include "controls.hh"
 
-#include <cassert>
 #include <cmath>
 
 bool Controls::are_convex(double eps) const

@@ -3,23 +3,24 @@
 
 #include "util.hh"
 
-class Label
+template <class T>
+class GenLabel
 {
 protected:
-  std::vector<idx> control_sums;
-  idx current_control;
+  std::vector<T> control_sums;
+  T current_control;
   double cost;
 
 public:
-  Label(const std::vector<idx>& control_sums,
-        idx current_control,
-        double cost)
+  GenLabel(const std::vector<T>& control_sums,
+           T current_control,
+           double cost)
     : control_sums(control_sums),
       current_control(current_control),
       cost(cost)
   {}
 
-  const std::vector<idx>& get_control_sums() const
+  const std::vector<T>& get_control_sums() const
   {
     return control_sums;
   }
@@ -34,5 +35,7 @@ public:
     return cost;
   }
 };
+
+typedef GenLabel<idx> Label;
 
 #endif /* LABEL_HH */

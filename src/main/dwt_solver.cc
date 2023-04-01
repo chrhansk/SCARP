@@ -57,7 +57,8 @@ int main(int argc, char **argv)
 
   std::ifstream input(input_name);
 
-  auto controls = ControlReader().read(input);
+  auto read_result = ControlReader().read_uniform(input);
+  FractionalControls fractional_controls = read_result.fractional_controls;
 
   std::vector<double> switch_on_costs{2, 1, 0};
   std::vector<double> switch_off_costs{.1, .1, 0};
@@ -66,7 +67,7 @@ int main(int argc, char **argv)
 
   SwitchCosts switch_costs(switch_on_costs, switch_off_costs);
 
-  DWTProgram program(controls,
+  DWTProgram program(fractional_controls,
                      switch_costs,
                      minimum_dwt,
                      scale_factor);

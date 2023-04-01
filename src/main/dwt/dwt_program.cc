@@ -56,7 +56,7 @@ void DWTProgram::create_initial_labels()
 
   for(idx i = 0; i < dimension; ++i)
   {
-    const double initial_cost = costs.initial_costs(i, fractional_controls(0, i));
+    const double initial_cost = costs.initial_costs(i, fractional_sum);
 
     next_front().push_back(LabelMap());
 
@@ -128,6 +128,7 @@ void DWTProgram::expand_label(DWTLabelPtr label)
 
 
     double next_cost = costs(*label,
+                             iteration,
                              next_control,
                              fractional_sum);
 

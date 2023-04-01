@@ -9,7 +9,9 @@ namespace po = boost::program_options;
 #include "control_writer.hh"
 
 #include "log.hh"
-#include "scarp/scarp_program.hh"
+
+#include "scarp/adaptive_program.hh"
+#include "scarp/uniform_program.hh"
 
 int main(int argc, char **argv)
 {
@@ -67,9 +69,12 @@ int main(int argc, char **argv)
 
   std::ifstream input(input_name);
 
-  auto controls = ControlReader().read(input);
+  // ControlReader().read_uniform(input);
 
-  const idx dimension = controls.dimension();
+  auto read_result = ControlReader().read_uniform(input);
+  FractionalControls fractional_controls = read_result.fractional_controls;
+
+  const idx dimension = fractional_controls.dimension();
 
   std::vector<double> switch_on_costs = default_switch_on_costs(dimension);
   std::vector<double> switch_off_costs = default_switch_off_costs(dimension);
@@ -78,12 +83,12 @@ int main(int argc, char **argv)
 
   if(sur_costs)
   {
-    SURCosts sur_costs;
+    SURCosts sur_costs(dimension);
 
-    SCARPProgram program(controls,
-                         sur_costs,
-                         scale_factor,
-                         vanishing_constraints);
+    UniformProgram program(fractional_controls,
+                           sur_costs,
+                           scale_factor,
+                           vanishing_constraints);
 
     if(collect_all)
     {
@@ -99,10 +104,10 @@ int main(int argc, char **argv)
   {
     SwitchCosts switch_costs(switch_on_costs, switch_off_costs);
 
-    SCARPProgram program(controls,
-                         switch_costs,
-                         scale_factor,
-                         vanishing_constraints);
+    UniformProgram program(fractional_controls,
+                           switch_costs,
+                           scale_factor,
+                           vanishing_constraints);
 
     if(collect_all)
     {

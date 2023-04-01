@@ -6,10 +6,23 @@
 
 #include "controls.hh"
 
+struct UniformReadResult
+{
+  FractionalControls fractional_controls;
+};
+
+struct AdaptiveReadResult
+{
+  FractionalControls fractional_controls;
+  std::vector<idx> cell_volumes;
+};
+
 class ControlReader
 {
 public:
-  FractionalControls read(std::istream& input);
+  UniformReadResult read_uniform(std::istream& input);
+
+  AdaptiveReadResult read_adaptive(std::istream& input);
 };
 
 

@@ -8,7 +8,7 @@ namespace po = boost::program_options;
 #include "control_writer.hh"
 
 #include "log.hh"
-#include "scarp/scarp_program.hh"
+#include "scarp/uniform_program.hh"
 
 #include "sur/sur.hh"
 
@@ -64,7 +64,8 @@ int main(int argc, char **argv)
 
   std::ifstream input(input_name);
 
-  auto fractional_controls = ControlReader().read(input);
+  auto read_result = ControlReader().read_uniform(input);
+  FractionalControls fractional_controls = read_result.fractional_controls;
 
   const idx dimension = fractional_controls.dimension();
 
@@ -76,9 +77,9 @@ int main(int argc, char **argv)
   std::vector<double> switch_off_costs = default_switch_off_costs(dimension);
 
   {
-    SURCosts sur_costs;
+    SURCosts sur_costs(dimension);
 
-    const double control_costs = SURCosts().total_cost(sur_controls, fractional_controls);
+    const double control_costs = sur_costs.total_cost(sur_controls, fractional_controls);
 
     const double switch_costs = SwitchCosts(switch_on_costs, switch_off_costs)
       .total_cost(sur_controls, fractional_controls);
