@@ -16,7 +16,7 @@ protected:
                          const CostFunction& costs) = 0;
 
 public:
-  void execute_all(const fs::path& result_file);
+  void execute_all(const fs::path& result_file, bool adaptive=false);
 };
 
 

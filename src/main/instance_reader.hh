@@ -4,12 +4,19 @@
 #include <iostream>
 #include <fstream>
 
+#include "controls.hh"
 #include "instance.hh"
 
 class InstanceReader
 {
+private:
+  FractionalControls create_controls(const std::vector<std::vector<double>>& control_values);
 public:
   Instance read_uniform(std::istream& input);
+
+  Instance read_adaptive(std::istream& input);
+
+  Instance read(std::istream& input, bool adaptive);
 };
 
 

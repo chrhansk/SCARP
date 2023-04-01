@@ -169,25 +169,25 @@ bool SCARPProgram::is_feasible(const SCARPLabel& label) const
       fraction_total += value;
     }
 
-    double label_total = 0.;
+    double label_sum = 0.;
 
     for(const auto& value : label.get_control_sums())
     {
-      label_total += value;
+      label_sum += value;
     }
 
-    assert(cmp::eq(fraction_total, label_total));
+    assert(cmp::eq(fraction_total, label_sum));
 
     if(label.get_predecessor())
     {
-      double pred_total = 0.;
+      double pred_sum = 0.;
 
       for(const auto& value : label.get_predecessor()->get_control_sums())
       {
-        pred_total += value;
+        pred_sum += value;
       }
 
-      assert(label_total - pred_total == mesh.cell_size(iteration - 1));
+      assert(label_sum - pred_sum == mesh.cell_size(iteration));
     }
 
   }

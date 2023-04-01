@@ -13,7 +13,7 @@
 
 #include "cmp.hh"
 
-void ProgramTest::execute_all(const fs::path& result_path)
+void ProgramTest::execute_all(const fs::path& result_path, bool adaptive)
 {
   auto split_string = [](const std::string& line)
     -> std::vector<std::string>
@@ -70,7 +70,7 @@ void ProgramTest::execute_all(const fs::path& result_path)
 
     fs::ifstream instance_input{instance_path};
 
-    auto instance = InstanceReader().read_uniform(instance_input);
+    auto instance = InstanceReader().read(instance_input, adaptive);
     const FractionalControls& fractional_controls = instance.get_fractional_controls();
 
     const idx dimension = fractional_controls.dimension();

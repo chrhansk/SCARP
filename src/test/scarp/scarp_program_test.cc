@@ -1,34 +1,4 @@
-#include <fstream>
-#include <iostream>
-#include <sstream>
-
-#include <boost/algorithm/string.hpp>
-#include <gtest/gtest.h>
-
-#include "defs.hh"
-#include "instance.hh"
-#include "log.hh"
-
-#include "scarp/scarp_program.hh"
-
-#include "parameters.hh"
-
-#include "test_fixture.hh"
-
-class SCARPProgramTest : public ProgramTest
-{
-private:
-  double scale_factor;
-
-protected:
-  virtual double execute(const Instance& instance,
-                         const CostFunction& costs) override;
-
-public:
-  SCARPProgramTest(double scale_factor)
-    : scale_factor(scale_factor)
-  {}
-};
+#include "scarp_program_test.hh"
 
 double SCARPProgramTest::execute(const Instance& instance,
                                  const CostFunction& costs)
@@ -43,54 +13,4 @@ double SCARPProgramTest::execute(const Instance& instance,
   auto controls = program.solve();
 
   return costs.total_cost(controls, fractional_controls);
-}
-
-
-TEST(SCARPProgram, solve_noreg_512_triple_10)
-{
-  log_init();
-
-  SCARPProgramTest program_test(1.0);
-  program_test.execute_all(fs::path(TESTS_DIRECTORY "/noreg/512_triple/results_1.0.csv"));
-}
-
-TEST(SCARPProgram, solve_noreg_512_triple_15)
-{
-  log_init();
-
-  SCARPProgramTest program_test(1.5);
-  program_test.execute_all(fs::path(TESTS_DIRECTORY "/noreg/512_triple/results_1.5.csv"));
-}
-
-TEST(SCARPProgram, solve_noreg_512_triple_20)
-{
-  log_init();
-
-  SCARPProgramTest program_test(2.0);
-  program_test.execute_all(fs::path(TESTS_DIRECTORY "/noreg/512_triple/results_2.0.csv"));
-}
-
-
-TEST(SCARPProgram, solve_l1reg_512_triple_10)
-{
-  log_init();
-
-  SCARPProgramTest program_test(1.0);
-  program_test.execute_all(fs::path(TESTS_DIRECTORY "/l1reg/512_triple/results_1.0.csv"));
-}
-
-TEST(SCARPProgram, solve_l1reg_512_triple_15)
-{
-  log_init();
-
-  SCARPProgramTest program_test(1.5);
-  program_test.execute_all(fs::path(TESTS_DIRECTORY "/l1reg/512_triple/results_1.5.csv"));
-}
-
-TEST(SCARPProgram, solve_l1reg_512_triple_20)
-{
-  log_init();
-
-  SCARPProgramTest program_test(2.0);
-  program_test.execute_all(fs::path(TESTS_DIRECTORY "/l1reg/512_triple/results_2.0.csv"));
 }

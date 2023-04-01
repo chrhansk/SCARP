@@ -1,7 +1,8 @@
 add_custom_target(build_tests)
 
 set(TEST_COMMON_SRC
-  test_fixture.cc)
+  test_fixture.cc
+  scarp/scarp_program_test.cc)
 
 add_library(test_common ${TEST_COMMON_SRC})
 
@@ -23,4 +24,5 @@ endfunction()
 
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}")
 
-add_unit_test(scarp/scarp_program_test)
+add_unit_test(scarp/uniform_mesh_test)
+add_unit_test(scarp/adaptive_mesh_test)
