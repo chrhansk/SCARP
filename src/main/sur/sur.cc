@@ -4,10 +4,13 @@
 
 #include <cassert>
 
-BinaryControls compute_sur_controls(const Controls& fractional_controls,
+BinaryControls compute_sur_controls(const Instance& instance,
                                     bool vanishing_constraints,
                                     double eps)
 {
+  const auto& fractional_controls = instance.get_fractional_controls();
+  const Mesh& mesh = instance.get_mesh();
+
   assert(fractional_controls.are_convex(eps));
 
   const idx n = fractional_controls.num_cells();
@@ -32,7 +35,7 @@ BinaryControls compute_sur_controls(const Controls& fractional_controls,
     {
       for(idx i = 0; i < m; ++i)
       {
-        fractional_control_sums.at(i) += fractional_controls(j, i);
+        fractional_control_sums.at(i) += mesh.cell_size(j) * fractional_controls(j, i);
       }
     };
 

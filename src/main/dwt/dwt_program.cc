@@ -129,6 +129,7 @@ void DWTProgram::expand_label(DWTLabelPtr label)
 
     double next_cost = costs(*label,
                              next_control,
+                             iteration,
                              fractional_sum);
 
     auto next_label = std::make_shared<DWTLabel>(next_control,

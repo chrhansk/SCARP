@@ -5,7 +5,7 @@ using namespace std;
 #include <boost/program_options.hpp>
 namespace po = boost::program_options;
 
-#include "control_reader.hh"
+#include "instance_reader.hh"
 #include "control_writer.hh"
 
 #include "log.hh"
@@ -67,7 +67,8 @@ int main(int argc, char **argv)
 
   std::ifstream input(input_name);
 
-  auto controls = ControlReader().read(input);
+  auto instance = InstanceReader().read_uniform(input);
+  const FractionalControls& controls = instance.get_fractional_controls();
 
   const idx dimension = controls.dimension();
 
@@ -78,9 +79,9 @@ int main(int argc, char **argv)
 
   if(sur_costs)
   {
-    SURCosts sur_costs;
+    SURCosts sur_costs(instance);
 
-    SCARPProgram program(controls,
+    SCARPProgram program(instance,
                          sur_costs,
                          scale_factor,
                          vanishing_constraints);
@@ -97,9 +98,11 @@ int main(int argc, char **argv)
   }
   else
   {
-    SwitchCosts switch_costs(switch_on_costs, switch_off_costs);
+    SwitchCosts switch_costs(instance,
+                             switch_on_costs,
+                             switch_off_costs);
 
-    SCARPProgram program(controls,
+    SCARPProgram program(instance,
                          switch_costs,
                          scale_factor,
                          vanishing_constraints);

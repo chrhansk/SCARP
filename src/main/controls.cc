@@ -1,4 +1,6 @@
 #include "controls.hh"
+#include "instance.hh"
+#include "util.hh"
 
 #include <cassert>
 #include <cmath>
@@ -42,8 +44,10 @@ bool Controls::are_integral(double eps) const
   return true;
 }
 
-double Controls::distance(const Controls& other) const
+double Controls::distance(const Controls& other,
+                          const Mesh& mesh) const
 {
+  assert(num_cells() == mesh.num_cells());
   assert(num_cells() == other.num_cells());
   assert(dimension() == other.dimension());
 
@@ -57,10 +61,12 @@ double Controls::distance(const Controls& other) const
 
   for(idx j = 0; j < n; ++j)
   {
+    const idx cell_size = mesh.cell_size(j);
+
     for(idx i = 0; i < m; ++i)
     {
-      sum.at(i) += (*this)(j, i);
-      other_sum.at(i) += other(j, i);
+      sum.at(i) += cell_size * (*this)(j, i);
+      other_sum.at(i) += cell_size * other(j, i);
     }
 
     for(idx i = 0; i < m; ++i)
@@ -96,6 +102,37 @@ bool Controls::satisfy_vanishing_constraints(const Controls& fractional_controls
   }
 
   return true;
+}
+
+FractionalControls Controls::partial_controls(idx n_cells) const
+{
+  const idx n = num_cells();
+  const idx m = dimension();
+
+  assert(n_cells <= n);
+
+  FractionalControls partial_controls(n_cells, m);
+
+  for(idx k = 0; k < n_cells; ++k)
+  {
+    for(idx i = 0; i < m; ++i)
+    {
+      partial_controls(k, i) = (*this)(k, i);
+    }
+  }
+
+  if(debugging_enabled())
+  {
+    for(idx k = 0; k < n_cells; ++k)
+    {
+      for(idx i = 0; i < m; ++i)
+      {
+        assert(partial_controls(k, i) == (*this)(k, i));
+      }
+    }
+  }
+
+  return partial_controls;
 }
 
 

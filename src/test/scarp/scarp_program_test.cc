@@ -6,6 +6,7 @@
 #include <gtest/gtest.h>
 
 #include "defs.hh"
+#include "instance.hh"
 #include "log.hh"
 
 #include "scarp/scarp_program.hh"
@@ -20,7 +21,7 @@ private:
   double scale_factor;
 
 protected:
-  virtual double execute(const FractionalControls& fractional_controls,
+  virtual double execute(const Instance& instance,
                          const CostFunction& costs) override;
 
 public:
@@ -29,12 +30,13 @@ public:
   {}
 };
 
-double SCARPProgramTest::execute(const FractionalControls& fractional_controls,
+double SCARPProgramTest::execute(const Instance& instance,
                                  const CostFunction& costs)
 {
+  const FractionalControls& fractional_controls = instance.get_fractional_controls();
   const idx dimension = fractional_controls.dimension();
 
-  SCARPProgram program(fractional_controls,
+  SCARPProgram program(instance,
                        costs,
                        scale_factor);
 

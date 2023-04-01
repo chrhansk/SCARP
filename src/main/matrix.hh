@@ -1,6 +1,7 @@
 #ifndef MATRIX_HH
 #define MATRIX_HH
 
+#include <cassert>
 #include <vector>
 
 #include "util.hh"
@@ -41,11 +42,17 @@ public:
 
   ConstRef operator()(const idx i, const idx j) const
   {
+    assert(i < num_rows());
+    assert(j < num_cols());
+
     return values.at(index(i, j));
   }
 
   Ref operator()(const idx i, const idx j)
   {
+    assert(i < num_rows());
+    assert(j < num_cols());
+
     return values.at(index(i, j));
   }
 

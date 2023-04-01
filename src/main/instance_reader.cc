@@ -1,8 +1,11 @@
-#include "control_reader.hh"
+#include "instance_reader.hh"
 
 #include <boost/algorithm/string.hpp>
+#include <memory>
 
+#include "instance.hh"
 #include "log.hh"
+#include "mesh.hh"
 
 class ReadError : public std::exception
 {
@@ -31,7 +34,7 @@ std::vector<std::string> get_tokens(const std::string& line)
   return filtered_tokens;
 }
 
-FractionalControls ControlReader::read(std::istream& input)
+Instance InstanceReader::read_uniform(std::istream& input)
 {
   std::vector<std::vector<double>> controls;
 
@@ -92,5 +95,8 @@ FractionalControls ControlReader::read(std::istream& input)
     }
   }
 
-  return fractional_controls;
+  auto mesh = std::unique_ptr<Mesh>(new UniformMesh(num_cells));
+
+  return Instance(std::move(mesh),
+                  std::move(fractional_controls));
 }

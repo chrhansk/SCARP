@@ -5,7 +5,7 @@ using namespace std;
 #include <boost/program_options.hpp>
 namespace po = boost::program_options;
 
-#include "control_reader.hh"
+#include "instance_reader.hh"
 #include "log.hh"
 
 int main(int argc, char *argv[])
@@ -52,7 +52,9 @@ int main(int argc, char *argv[])
 
   std::ifstream fractional_input(fractional_name);
 
-  auto fractional_controls = ControlReader().read(fractional_input);
+  auto instance = InstanceReader().read_uniform(fractional_input);
+  const FractionalControls& fractional_controls = instance.get_fractional_controls();
+  const Mesh& mesh = instance.get_mesh();
 
   if(!fractional_controls.are_convex())
   {
@@ -61,7 +63,8 @@ int main(int argc, char *argv[])
 
   std::ifstream integral_input(integral_name);
 
-  auto integral_controls = ControlReader().read(integral_input);
+  auto integral_instance = InstanceReader().read_uniform(integral_input);
+  const FractionalControls& integral_controls = integral_instance.get_fractional_controls();
 
   if(!(integral_controls.are_convex()))
   {
@@ -93,7 +96,8 @@ int main(int argc, char *argv[])
 
   deviation *= scale_factor;
 
-  const double distance = fractional_controls.distance(integral_controls);
+  const double distance = fractional_controls.distance(integral_controls,
+                                                       mesh);
 
   if(!cmp::le(distance, deviation))
   {

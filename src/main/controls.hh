@@ -7,7 +7,9 @@
 #include "cmp.hh"
 #include "util.hh"
 
-// typedef std::vector<double> Controls;
+
+class Mesh;
+class FractionalControls;
 
 class Controls
 {
@@ -26,8 +28,10 @@ public:
   bool satisfy_vanishing_constraints(const Controls& fractional_controls,
                                      double eps = cmp::eps) const;
 
-  double distance(const Controls& other) const;
+  double distance(const Controls& other,
+                  const Mesh& mesh) const;
 
+  FractionalControls partial_controls(idx n_cells) const;
 };
 
 class FractionalControls : public Controls

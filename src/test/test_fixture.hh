@@ -5,14 +5,14 @@
 
 namespace fs = boost::filesystem;
 
-#include "controls.hh"
+#include "instance.hh"
 
 #include "cost_function.hh"
 
 class ProgramTest
 {
 protected:
-  virtual double execute(const FractionalControls& fractional_controls,
+  virtual double execute(const Instance& instance,
                          const CostFunction& costs) = 0;
 
 public:

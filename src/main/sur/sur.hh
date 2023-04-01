@@ -1,9 +1,9 @@
 #ifndef SUR_HH
 #define SUR_HH
 
-#include "controls.hh"
+#include "instance.hh"
 
-BinaryControls compute_sur_controls(const Controls& fractional_controls,
+BinaryControls compute_sur_controls(const Instance& instance,
                                     bool vanishing_constraints = false,
                                     double eps = cmp::eps);
 

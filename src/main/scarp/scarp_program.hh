@@ -9,6 +9,7 @@
 #include "scarp_label.hh"
 
 #include "controls.hh"
+#include "instance.hh"
 #include "parameters.hh"
 
 #include "cost_function.hh"
@@ -28,6 +29,7 @@ private:
 
   idx num_labels, num_expansions;
 
+  const Instance& instance;
   const Controls& fractional_controls;
 
   const bool vanishing_constraints;
@@ -46,7 +48,7 @@ private:
 
   bool is_feasible(const SCARPLabel& label) const;
 
-  bool is_feasible(const BinaryControls& actual_controls) const;
+  bool check_feasible(const BinaryControls& actual_controls) const;
 
   void expand_label(SCARPLabelPtr label);
 
@@ -59,7 +61,7 @@ private:
   void expand_all();
 
 public:
-  SCARPProgram(const Controls& fractional_controls,
+  SCARPProgram(const Instance& instance,
                const CostFunction& costs,
                double scale_factor = 1.,
                bool vanishing_constraints = false);

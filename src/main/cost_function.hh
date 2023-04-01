@@ -4,11 +4,17 @@
 #include <cassert>
 
 #include "controls.hh"
+#include "instance.hh"
 #include "label.hh"
 
 class CostFunction
 {
+protected:
+  const Instance& instance;
 public:
+  CostFunction(const Instance& instance)
+    : instance(instance)
+  {}
   virtual double initial_costs(idx initial_control,
                                double fractional_control) const = 0;
 
@@ -17,6 +23,7 @@ public:
   // sum includes next_control
   virtual double operator()(const Label& previous_label,
                             idx next_control,
+                            idx next_cell_index,
                             const std::vector<double>& fractional_control_sums) const = 0;
 
   double total_cost(const Controls& controls,
@@ -30,9 +37,11 @@ private:
   const std::vector<double> switch_on_costs;
   const std::vector<double> switch_off_costs;
 public:
-  SwitchCosts(const std::vector<double>& switch_on_costs,
+  SwitchCosts(const Instance& instance,
+              const std::vector<double>& switch_on_costs,
               const std::vector<double>& switch_off_costs)
-    : switch_on_costs(switch_on_costs),
+    : CostFunction(instance),
+      switch_on_costs(switch_on_costs),
       switch_off_costs(switch_off_costs)
   {}
 
@@ -49,6 +58,7 @@ public:
 
   double operator()(const Label& previous_label,
                     idx next_control,
+                    idx next_cell_index,
                     const std::vector<double>& fractional_control_sums) const override
   {
     const idx previous_control = previous_label.get_current_control();
@@ -68,6 +78,11 @@ public:
 
 class SURCosts : public CostFunction
 {
+public:
+  SURCosts(const Instance& instance)
+    : CostFunction(instance)
+  {}
+
   double initial_costs(idx initial_control,
                        double fractional_control) const override
   {
@@ -81,6 +96,7 @@ class SURCosts : public CostFunction
 
   double operator()(const Label& previous_label,
                     idx next_control,
+                    idx next_cell_index,
                     const std::vector<double>& fractional_control_sums) const override
   {
     const idx num_controls = previous_label.get_control_sums().size();

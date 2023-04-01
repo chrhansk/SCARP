@@ -7,14 +7,15 @@
 #include "log.hh"
 
 
-SCARPProgram::SCARPProgram(const Controls& fractional_controls,
+SCARPProgram::SCARPProgram(const Instance& instance,
                            const CostFunction& costs,
                            double scale_factor,
                            bool vanishing_constraints)
   : costs(costs),
     num_labels(0),
     num_expansions(0),
-    fractional_controls(fractional_controls),
+    instance(instance),
+    fractional_controls(instance.get_fractional_controls()),
     vanishing_constraints(vanishing_constraints),
     size(fractional_controls.num_cells()),
     dimension(fractional_controls.dimension()),
@@ -48,6 +49,8 @@ void SCARPProgram::create_initial_labels()
 
   idx num_initial_labels = 0;
 
+  const idx cell_size = instance.get_mesh().cell_size(iteration);
+
   for(idx i = 0; i < dimension; ++i)
   {
     const double initial_cost = costs.initial_costs(i, fractional_controls(0, i));
@@ -56,7 +59,8 @@ void SCARPProgram::create_initial_labels()
 
     auto label = std::make_shared<SCARPLabel>(i,
                                               dimension,
-                                              initial_cost);
+                                              initial_cost,
+                                              cell_size);
 
     if(is_feasible(*label))
     {
@@ -75,17 +79,21 @@ void SCARPProgram::create_initial_labels()
 
 void SCARPProgram::expand_label(SCARPLabelPtr label)
 {
-  assert(is_feasible(get_controls(label)));
+  assert(check_feasible(get_controls(label)));
+
+  const idx cell_size = instance.get_mesh().cell_size(iteration);
 
   for(idx next_control = 0; next_control < dimension; ++next_control)
   {
     double next_cost = costs(*label,
                              next_control,
+                             iteration,
                              fractional_sum);
 
     auto next_label = std::make_shared<SCARPLabel>(next_control,
                                                    next_cost,
-                                                   label);
+                                                   label,
+                                                   cell_size);
 
     if(!is_feasible(*next_label))
     {
@@ -94,7 +102,7 @@ void SCARPProgram::expand_label(SCARPLabelPtr label)
 
     ++num_expansions;
 
-    assert(is_feasible(get_controls(next_label)));
+    assert(check_feasible(get_controls(next_label)));
 
     auto it = next_front().at(next_control).find(next_label);
 
@@ -152,6 +160,8 @@ bool SCARPProgram::is_feasible(const SCARPLabel& label) const
 {
   if(debugging_enabled())
   {
+    const Mesh& mesh = instance.get_mesh();
+
     double fraction_total = 0.;
 
     for(const auto& value : fractional_sum)
@@ -166,7 +176,7 @@ bool SCARPProgram::is_feasible(const SCARPLabel& label) const
       label_total += value;
     }
 
-    assert(cmp::eq(fraction_total, label_total, 1e-3));
+    assert(cmp::eq(fraction_total, label_total));
 
     if(label.get_predecessor())
     {
@@ -177,7 +187,7 @@ bool SCARPProgram::is_feasible(const SCARPLabel& label) const
         pred_total += value;
       }
 
-      assert(label_total - pred_total == 1);
+      assert(label_total - pred_total == mesh.cell_size(iteration - 1));
     }
 
   }
@@ -207,27 +217,23 @@ bool SCARPProgram::is_feasible(const SCARPLabel& label) const
   return true;
 }
 
-bool SCARPProgram::is_feasible(const BinaryControls& actual_controls) const
+bool SCARPProgram::check_feasible(const BinaryControls& actual_controls) const
 {
-  if (!(actual_controls.are_integral() && actual_controls.are_convex()))
-  {
-    return false;
-  }
+  const Mesh& mesh = instance.get_mesh();
 
-  const idx num_cells = actual_controls.num_cells();
+  assert(actual_controls.are_integral());
+  assert(actual_controls.are_convex());
 
-  FractionalControls partial_controls(num_cells,
-                                      dimension);
+  const idx actual_size = actual_controls.num_cells();
 
-  for(idx k = 0; k < num_cells; ++k)
-  {
-    for(idx i = 0; i < dimension; ++i)
-    {
-      partial_controls(k, i) = fractional_controls(k, i);
-    }
-  }
+  PartialMesh partial_mesh(mesh, actual_size);
 
-  return cmp::le(actual_controls.distance(partial_controls), max_deviation);
+  FractionalControls partial_controls = fractional_controls.partial_controls(actual_size);
+
+  assert(cmp::le(actual_controls.distance(partial_controls, partial_mesh),
+                 max_deviation));
+
+  return true;
 }
 
 void SCARPProgram::expand_all()
@@ -240,10 +246,12 @@ void SCARPProgram::expand_all()
             << std::boolalpha
             << vanishing_constraints;
 
+  const Mesh& mesh = instance.get_mesh();
+
 
   for(idx i = 0; i < dimension; ++i)
   {
-    fractional_sum.at(i) = fractional_controls(0, i);
+    fractional_sum.at(i) = mesh.cell_size(0) * fractional_controls(0, i);
   }
 
   create_initial_labels();
@@ -254,7 +262,7 @@ void SCARPProgram::expand_all()
 
     for(idx i = 0; i < dimension; ++i)
     {
-      fractional_sum.at(i) += fractional_controls(iteration, i);
+      fractional_sum.at(i) += mesh.cell_size(iteration) * fractional_controls(iteration, i);
     }
 
     expand_labels();
@@ -299,7 +307,7 @@ BinaryControls SCARPProgram::solve()
   assert(dimension == min_controls.dimension());
   assert(size == min_controls.num_cells());
 
-  assert(is_feasible(min_controls));
+  assert(check_feasible(min_controls));
 
   Log(info) << "Created " << num_labels
             << " labels during "
@@ -371,7 +379,7 @@ std::vector<BinaryControls> SCARPProgram::solve_all()
       assert(dimension == min_controls.dimension());
       assert(size == min_controls.num_cells());
 
-      assert(is_feasible(min_controls));
+      assert(check_feasible(min_controls));
 
       all_controls.push_back(min_controls);
     }

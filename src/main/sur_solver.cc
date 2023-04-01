@@ -4,7 +4,7 @@ using namespace std;
 #include <boost/program_options.hpp>
 namespace po = boost::program_options;
 
-#include "control_reader.hh"
+#include "instance_reader.hh"
 #include "control_writer.hh"
 
 #include "log.hh"
@@ -64,28 +64,31 @@ int main(int argc, char **argv)
 
   std::ifstream input(input_name);
 
-  auto fractional_controls = ControlReader().read(input);
+  auto instance = InstanceReader().read_uniform(input);
+  const FractionalControls& fractional_controls = instance.get_fractional_controls();
 
   const idx dimension = fractional_controls.dimension();
 
-  BinaryControls sur_controls = compute_sur_controls(fractional_controls,
-                                                     vanishing_constraints,
-                                                     1e-3);
+  BinaryControls sur_controls = compute_sur_controls(instance,
+                                                     vanishing_constraints);
 
   std::vector<double> switch_on_costs = default_switch_on_costs(dimension);
   std::vector<double> switch_off_costs = default_switch_off_costs(dimension);
 
   {
-    SURCosts sur_costs;
+    SURCosts sur_costs(instance);
 
-    const double control_costs = SURCosts().total_cost(sur_controls, fractional_controls);
+    const double total_control_costs = sur_costs.total_cost(sur_controls, fractional_controls);
 
-    const double switch_costs = SwitchCosts(switch_on_costs, switch_off_costs)
-      .total_cost(sur_controls, fractional_controls);
+    SwitchCosts switch_costs(instance,
+                             switch_on_costs,
+                             switch_off_costs);
 
-    Log(info) << "SUR costs of rounded controls: " << control_costs
+    const double total_switch_costs = switch_costs.total_cost(sur_controls, fractional_controls);
+
+    Log(info) << "SUR costs of rounded controls: " << total_control_costs
               << ", upper bound: " << max_control_deviation(dimension)
-              << ", switching cost: " << switch_costs;
+              << ", switching cost: " << total_switch_costs;
 
   }
 

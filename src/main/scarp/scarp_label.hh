@@ -18,21 +18,23 @@ private:
 public:
   SCARPLabel(idx current_control,
              double cost,
-             SCARPLabelPtr predecessor)
+             SCARPLabelPtr predecessor,
+             idx cell_size = 1)
     : Label(predecessor->get_control_sums(),
             current_control,
             cost),
       predecessor(predecessor)
   {
-    control_sums.at(current_control)++;
+    control_sums.at(current_control) += cell_size;
   }
 
   SCARPLabel(idx current_control,
              idx dimension,
-             double cost)
+             double cost,
+             idx cell_size = 1)
     : Label(std::vector<idx>(dimension, 0), current_control, cost)
   {
-    control_sums.at(current_control)++;
+    control_sums.at(current_control) += cell_size;
   }
 
   void replace(const SCARPLabel& other)
