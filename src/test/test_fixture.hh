@@ -13,10 +13,13 @@ class ProgramTest
 {
 protected:
   virtual double execute(const Instance& instance,
-                         const CostFunction& costs) = 0;
+                         const CostFunction& costs,
+                         bool vanishing_constraints) = 0;
 
 public:
-  void execute_all(const fs::path& result_file, bool adaptive=false);
+  void execute_all(const fs::path& result_file,
+                   bool adaptive=false,
+                   bool vanishing_constraints=false);
 };
 
 

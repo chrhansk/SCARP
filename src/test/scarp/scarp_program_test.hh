@@ -11,7 +11,8 @@ private:
 
 protected:
   virtual double execute(const Instance& instance,
-                         const CostFunction& costs) override;
+                         const CostFunction& costs,
+                         bool vanishing_constraints) override;
 
 public:
   SCARPProgramTest(double scale_factor=1.0)

@@ -13,7 +13,7 @@
 
 #include "cmp.hh"
 
-void ProgramTest::execute_all(const fs::path& result_path, bool adaptive)
+void ProgramTest::execute_all(const fs::path& result_path, bool adaptive, bool vanishing_constraints)
 {
   auto split_string = [](const std::string& line)
     -> std::vector<std::string>
@@ -83,7 +83,7 @@ void ProgramTest::execute_all(const fs::path& result_path, bool adaptive)
                              switch_on_costs,
                              switch_off_costs);
 
-    double actual = execute(instance, switch_costs);
+    double actual = execute(instance, switch_costs, vanishing_constraints);
 
     ASSERT_TRUE(cmp::eq(actual, expected, 1e-3));
   }
