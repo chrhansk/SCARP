@@ -1,0 +1,30 @@
+name: Tests
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install General
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential libboost-all-dev git cmake
+      - name: Create build directory and run CMake
+        run: |
+          mkdir build
+          cd build
+          cmake .. -DCMAKE_BUILD_TYPE=Debug
+      - name: Build project
+        run: |
+          cd build
+          make
+      - name: Test project
+        run: |
+          cd build
+          make test
