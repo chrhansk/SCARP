@@ -53,7 +53,7 @@ void SCARPProgram::create_initial_labels()
 
   for(idx i = 0; i < dimension; ++i)
   {
-    const double initial_cost = costs.initial_costs(i, fractional_controls(0, i));
+    const double initial_cost = costs.initial_costs(i, fractional_sum);
 
     next_front().push_back(LabelSet());
 
@@ -169,14 +169,14 @@ bool SCARPProgram::is_feasible(const SCARPLabel& label) const
       fraction_total += value;
     }
 
-    double label_sum = 0.;
+    double label_total = 0.;
 
     for(const auto& value : label.get_control_sums())
     {
-      label_sum += value;
+      label_total += value;
     }
 
-    assert(cmp::eq(fraction_total, label_sum));
+    assert(cmp::eq(fraction_total, label_total));
 
     if(label.get_predecessor())
     {
@@ -187,7 +187,7 @@ bool SCARPProgram::is_feasible(const SCARPLabel& label) const
         pred_sum += value;
       }
 
-      assert(label_sum - pred_sum == mesh.cell_size(iteration));
+      assert(label_total - pred_sum == mesh.cell_size(iteration));
     }
 
   }

@@ -1,6 +1,8 @@
 #ifndef LABEL_HH
 #define LABEL_HH
 
+#include <cassert>
+
 #include "util.hh"
 
 class Label
@@ -17,11 +19,18 @@ public:
     : control_sums(control_sums),
       current_control(current_control),
       cost(cost)
-  {}
+  {
+    assert(current_control < dimension());
+  }
 
   const std::vector<idx>& get_control_sums() const
   {
     return control_sums;
+  }
+
+  const idx dimension() const
+  {
+    return control_sums.size();
   }
 
   idx get_current_control() const

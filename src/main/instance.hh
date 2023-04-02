@@ -20,6 +20,17 @@ public:
       fractional_controls(fractional_controls)
   {
     assert(mesh);
+    assert(mesh->num_cells() == fractional_controls.num_cells());
+  }
+
+  const idx num_cells() const
+  {
+    return fractional_controls.num_cells();
+  }
+
+  const idx dimension() const
+  {
+    return fractional_controls.dimension();
   }
 
   const Mesh& get_mesh() const
