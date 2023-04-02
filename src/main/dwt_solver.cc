@@ -4,7 +4,7 @@ using namespace std;
 #include <boost/program_options.hpp>
 namespace po = boost::program_options;
 
-#include "control_reader.hh"
+#include "instance_reader.hh"
 #include "control_writer.hh"
 
 #include "log.hh"
@@ -57,16 +57,20 @@ int main(int argc, char **argv)
 
   std::ifstream input(input_name);
 
-  auto controls = ControlReader().read(input);
+  Instance instance = InstanceReader().read_uniform(input);
+  const auto& controls = instance.get_fractional_controls();
 
   std::vector<double> switch_on_costs{2, 1, 0};
   std::vector<double> switch_off_costs{.1, .1, 0};
 
   std::vector<idx> minimum_dwt{2, 2, 0};
 
+  SwitchCosts switch_costs(instance,
+                           switch_on_costs,
+                           switch_off_costs);
+
   DWTProgram program(controls,
-                     switch_on_costs,
-                     switch_off_costs,
+                     switch_costs,
                      minimum_dwt,
                      scale_factor);
 

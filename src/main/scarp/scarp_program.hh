@@ -9,6 +9,7 @@
 #include "scarp_label.hh"
 
 #include "controls.hh"
+#include "instance.hh"
 #include "parameters.hh"
 
 #include "cost_function.hh"
@@ -28,13 +29,14 @@ private:
 
   idx num_labels, num_expansions;
 
-  const std::vector<Controls>& fractional_controls;
+  const Instance& instance;
+  const Controls& fractional_controls;
 
-  bool vanishing_constraints;
+  const bool vanishing_constraints;
 
   const idx size, dimension;
 
-  double max_deviation;
+  const double max_deviation;
 
   std::vector<double> fractional_sum;
 
@@ -46,11 +48,11 @@ private:
 
   bool is_feasible(const SCARPLabel& label) const;
 
-  bool is_feasible(const std::vector<Controls>& actual_controls) const;
+  bool check_feasible(const BinaryControls& actual_controls) const;
 
   void expand_label(SCARPLabelPtr label);
 
-  std::vector<Controls> get_controls(SCARPLabelPtr label) const;
+  BinaryControls get_controls(SCARPLabelPtr label) const;
 
   LabelFront& current_front();
 
@@ -59,14 +61,14 @@ private:
   void expand_all();
 
 public:
-  SCARPProgram(const std::vector<Controls>& controls,
+  SCARPProgram(const Instance& instance,
                const CostFunction& costs,
                double scale_factor = 1.,
                bool vanishing_constraints = false);
 
-  std::vector<Controls> solve();
+  BinaryControls solve();
 
-  std::vector<std::vector<Controls>> solve_all();
+  std::vector<BinaryControls> solve_all();
 };
 
 

@@ -6,6 +6,7 @@
 #include <boost/container_hash/hash.hpp>
 
 #include "bounded_label_set.hh"
+#include "cost_function.hh"
 #include "controls.hh"
 #include "dwt_label.hh"
 
@@ -54,12 +55,11 @@ private:
 
   typedef std::vector<LabelMap> LabelFront;
 
+  const CostFunction& costs;
+
   LabelFront _current_labels, _next_labels;
 
-  const std::vector<Controls>& fractional_controls;
-
-  std::vector<double> switch_on_costs;
-  std::vector<double> switch_off_costs;
+  const Controls& fractional_controls;
 
   const idx size, dimension;
 
@@ -83,16 +83,15 @@ private:
 
   bool is_feasible(const DWTLabel& label) const;
 
-  std::vector<Controls> get_controls(DWTLabelPtr label) const;
+  BinaryControls get_controls(DWTLabelPtr label) const;
 
 public:
-  DWTProgram(const std::vector<Controls>& fractional_controls,
-             const std::vector<double>& switch_on_costs,
-             const std::vector<double>& switch_off_costs,
+  DWTProgram(const Controls& fractional_controls,
+             const CostFunction& costs,
              const std::vector<idx>& minimum_dwt,
              double scale_factor=1.);
 
-  std::vector<Controls> solve();
+  BinaryControls solve();
 };
 
 

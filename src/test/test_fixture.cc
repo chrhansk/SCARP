@@ -2,17 +2,18 @@
 
 #include <iostream>
 
+#include <boost/filesystem/fstream.hpp>
 #include <boost/algorithm/string.hpp>
 
 #include <gtest/gtest.h>
 
 #include "parameters.hh"
 
-#include "control_reader.hh"
+#include "instance_reader.hh"
 
 #include "cmp.hh"
 
-void ProgramTest::execute_all(const fs::path& result_path)
+void ProgramTest::execute_all(const fs::path& result_path, bool adaptive, bool vanishing_constraints)
 {
   auto split_string = [](const std::string& line)
     -> std::vector<std::string>
@@ -69,17 +70,20 @@ void ProgramTest::execute_all(const fs::path& result_path)
 
     fs::ifstream instance_input{instance_path};
 
-    std::vector<Controls> fractional_controls = ControlReader().read(instance_input);
+    auto instance = InstanceReader().read(instance_input, adaptive);
+    const FractionalControls& fractional_controls = instance.get_fractional_controls();
 
-    const idx dimension = fractional_controls.size();
+    const idx dimension = fractional_controls.dimension();
 
     std::vector<double> switch_on_costs = default_switch_on_costs(dimension);
 
     std::vector<double> switch_off_costs = default_switch_off_costs(dimension);
 
-    SwitchCosts switch_costs(switch_on_costs, switch_off_costs);
+    SwitchCosts switch_costs(instance,
+                             switch_on_costs,
+                             switch_off_costs);
 
-    double actual = execute(fractional_controls, switch_costs);
+    double actual = execute(instance, switch_costs, vanishing_constraints);
 
     ASSERT_TRUE(cmp::eq(actual, expected, 1e-3));
   }

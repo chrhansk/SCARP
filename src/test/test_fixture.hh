@@ -5,18 +5,21 @@
 
 namespace fs = boost::filesystem;
 
-#include "controls.hh"
+#include "instance.hh"
 
 #include "cost_function.hh"
 
 class ProgramTest
 {
 protected:
-  virtual double execute(const std::vector<Controls>& controls,
-                         const CostFunction& costs) = 0;
+  virtual double execute(const Instance& instance,
+                         const CostFunction& costs,
+                         bool vanishing_constraints) = 0;
 
 public:
-  void execute_all(const fs::path& result_file);
+  void execute_all(const fs::path& result_file,
+                   bool adaptive=false,
+                   bool vanishing_constraints=false);
 };
 
 

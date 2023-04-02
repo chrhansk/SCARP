@@ -1,7 +1,7 @@
 set(COMMON_SRC
   ansi_color.cc
   cmp.cc
-  control_reader.cc
+  instance_reader.cc
   control_writer.cc
   controls.cc
   cost_function.cc

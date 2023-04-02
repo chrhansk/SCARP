@@ -99,8 +99,7 @@ template <class Label, class Costs, class Lengths>
 bool BoundedLabelSet<Label, Costs, Lengths>::dominates(const Label& first,
                                                        const Label& second) const
 {
-  return costs(first) <= costs(second) &&
-    lengths(first) <= lengths(second);
+  return (costs(first) <= costs(second)) && (lengths(first) <= lengths(second));
 }
 
 template <class Label, class Costs, class Lengths>
@@ -161,7 +160,7 @@ BoundedLabelSet<Label, Costs, Lengths>::is_dominated(std::shared_ptr<Label> labe
 
   assert(lower_bound != std::end(labels));
 
-  while(lower_bound->first > length && lower_bound != std::begin(labels))
+  while((lower_bound->first > length) && (lower_bound != std::begin(labels)))
   {
     --lower_bound;
   }

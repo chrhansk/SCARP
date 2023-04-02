@@ -10,10 +10,10 @@ class ControlWriter
 {
 public:
   void write(std::ostream& output,
-             const std::vector<Controls>& controls);
+             const Controls& controls);
 
   void writeAMPL(std::ostream& output,
-                 const std::vector<Controls>& controls);
+                 const Controls& controls);
 };
 
 

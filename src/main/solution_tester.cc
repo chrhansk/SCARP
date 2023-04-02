@@ -5,7 +5,7 @@ using namespace std;
 #include <boost/program_options.hpp>
 namespace po = boost::program_options;
 
-#include "control_reader.hh"
+#include "instance_reader.hh"
 #include "log.hh"
 
 int main(int argc, char *argv[])
@@ -52,32 +52,35 @@ int main(int argc, char *argv[])
 
   std::ifstream fractional_input(fractional_name);
 
-  auto fractional_controls = ControlReader().read(fractional_input);
+  auto instance = InstanceReader().read_uniform(fractional_input);
+  const FractionalControls& fractional_controls = instance.get_fractional_controls();
+  const Mesh& mesh = instance.get_mesh();
 
-  if(!controls_are_convex(fractional_controls))
+  if(!fractional_controls.are_convex())
   {
     Log(error) << "Fractional controls are not convex";
   }
 
   std::ifstream integral_input(integral_name);
 
-  auto integral_controls = ControlReader().read(integral_input);
+  auto integral_instance = InstanceReader().read_uniform(integral_input);
+  const FractionalControls& integral_controls = integral_instance.get_fractional_controls();
 
-  if(!controls_are_convex(integral_controls))
+  if(!(integral_controls.are_convex()))
   {
     Log(error) << "Integral controls are not convex";
   }
 
-  if(!controls_are_integral(integral_controls))
+  if(!integral_controls.are_integral())
   {
     Log(error) << "Integral controls are not integral";
   }
 
-  const idx fractional_size = fractional_controls.front().size();
-  const idx fractional_dimension = fractional_controls.size();
+  const idx fractional_size = fractional_controls.num_cells();
+  const idx fractional_dimension = fractional_controls.dimension();
 
-  const idx integral_size = integral_controls.front().size();
-  const idx integral_dimension = integral_controls.size();
+  const idx integral_size = integral_controls.num_cells();
+  const idx integral_dimension = integral_controls.dimension();
 
   if(integral_size != fractional_size)
   {
@@ -93,8 +96,8 @@ int main(int argc, char *argv[])
 
   deviation *= scale_factor;
 
-  const double distance = control_distance(fractional_controls,
-                                           integral_controls);
+  const double distance = fractional_controls.distance(integral_controls,
+                                                       mesh);
 
   if(!cmp::le(distance, deviation))
   {
