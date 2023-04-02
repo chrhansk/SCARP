@@ -6,15 +6,17 @@ set(TEST_COMMON_SRC
 
 add_library(test_common ${TEST_COMMON_SRC})
 
+target_link_libraries(test_common
+  PUBLIC
+  GTest::GTest)
+
 function(add_unit_test TEST_NAME)
   get_filename_component(BASE_NAME ${TEST_NAME} NAME)
   add_executable(${BASE_NAME} ${TEST_NAME}.cc)
 
   target_link_libraries(${BASE_NAME}
     test_common
-    common
-    gtest
-    gtest_main)
+    common)
 
   add_dependencies(build_tests ${BASE_NAME})
 

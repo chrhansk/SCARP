@@ -8,19 +8,17 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 
 enable_testing()
 
-configure_file("${CMAKE_SOURCE_DIR}/cmake/CMakeLists.txt.in"
-  googletest-src/CMakeLists.txt)
+include(FetchContent)
 
-execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
-  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/googletest-download )
+FetchContent_Declare(
+  googletest
+  GIT_REPOSITORY https://github.com/google/googletest.git
+  GIT_TAG        release-1.12.1
+)
 
-execute_process(COMMAND ${CMAKE_COMMAND} --build .
-  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/googletest-download )
-
-set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-
-add_subdirectory(${CMAKE_BINARY_DIR}/googletest-src
-  ${CMAKE_BINARY_DIR}/googletest-build)
+FetchContent_MakeAvailable(googletest)
+add_library(GTest::GTest INTERFACE IMPORTED)
+target_link_libraries(GTest::GTest INTERFACE gtest_main)
 
 find_package(Boost 1.54
   COMPONENTS date_time filesystem log log_setup program_options thread system
