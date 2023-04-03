@@ -5,6 +5,7 @@
 
 #include <set>
 #include <unordered_set>
+#include <vector>
 
 #include "scarp_label.hh"
 
@@ -25,6 +26,9 @@ public:
   typedef std::vector<LabelSet> LabelFront;
 private:
   const CostFunction& costs;
+  std::vector<Handle> predecessors;
+  std::vector<idx> controls;
+
   LabelFront _current_labels, _next_labels;
 
   idx num_labels, num_expansions;
