@@ -4,9 +4,11 @@ project(SCARP
   VERSION 0.1.0
   LANGUAGES CXX)
 
+string(TOLOWER ${PROJECT_NAME} project_name)
+
 include(GNUInstallDirs)
 
-set(PROJECT_NAMESPACE "${PROJECT_NAME}::")
+set(PROJECT_NAMESPACE "${project_name}::")
 
 set(CMAKE_CXX_STANDARD 14)
 
@@ -48,11 +50,11 @@ endif()
 
 add_subdirectory(src)
 
-set(CONFIG_FILE "${CMAKE_SOURCE_DIR}/cmake/${PROJECT_NAME}-config.cmake")
-set(CONFIG_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake")
-set(CONFIG_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/sleqp")
+set(CONFIG_FILE "${CMAKE_SOURCE_DIR}/cmake/${project_name}-config.cmake")
+set(CONFIG_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/${project_name}-config-version.cmake")
+set(CONFIG_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${project_name}")
 
-set(TARGET_FILE "${PROJECT_NAME}-targets.cmake")
+set(TARGET_FILE "${project_name}-targets.cmake")
 
 install(EXPORT ${PROJECT_NAMESPACE}SCARP
   FILE ${TARGET_FILE}

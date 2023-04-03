@@ -1,6 +1,7 @@
 #ifndef BOUNDED_LABEL_SET_HH
 #define BOUNDED_LABEL_SET_HH
 
+#include <cassert>
 #include <map>
 #include <memory>
 

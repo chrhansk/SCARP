@@ -14,6 +14,7 @@ target_include_directories(test_common
 target_link_libraries(test_common
   PUBLIC
   scarp
+  ${Boost_LIBRARIES}
   GTest::GTest)
 
 function(add_unit_test TEST_NAME)

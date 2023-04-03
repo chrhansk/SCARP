@@ -3,8 +3,6 @@
 
 #include <unordered_map>
 
-#include <boost/container_hash/hash.hpp>
-
 #include "scarp/bounded_label_set.hh"
 #include "scarp/cost_function.hh"
 #include "scarp/controls.hh"
@@ -40,15 +38,7 @@ private:
 
   struct ControlSumsHash
   {
-    std::size_t operator()(const ControlSums& control_sums) const
-    {
-      std::size_t seed = 0;
-
-      boost::hash_combine(seed,
-                          boost::hash_range(control_sums.begin(), control_sums.end()));
-
-      return seed;
-    }
+    std::size_t operator()(const ControlSums& control_sums) const;
   };
 
   typedef std::unordered_map<ControlSums, LabelSet, ControlSumsHash> LabelMap;

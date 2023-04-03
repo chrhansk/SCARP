@@ -1,8 +1,8 @@
 #ifndef SCARP_LABEL_HH
 #define SCARP_LABEL_HH
 
-#include <boost/container_hash/hash.hpp>
 #include <utility>
+#include <memory>
 #include <vector>
 
 #include "scarp/handle.hh"
@@ -73,54 +73,26 @@ public:
   }
 };
 
-namespace std
-{
-  template<>
-  struct hash<SCARPLabel>
-  {
-    std::size_t operator()(const SCARPLabel& label) const
-    {
-      std::size_t seed = 0;
-
-      boost::hash_combine(seed,
-                          boost::hash_range(label.get_control_sums().begin(),
-                                            label.get_control_sums().end()));
-
-      boost::hash_combine(seed, label.get_current_control());
-
-      return seed;
-    }
-  };
-}
-
 struct SCARPLabelHash
 {
-  std::size_t operator()(const SCARPLabelPtr& label) const
-  {
-    assert(label);
-    return std::hash<SCARPLabel>()(*label);
-  }
+  std::size_t operator()(const SCARPLabel& label) const;
 };
 
-struct SCARPLabelOrdering
+struct SCARPLabelPtrHash
+{
+  std::size_t operator()(const SCARPLabelPtr& label) const;
+};
+
+struct SCARPLabelPtrOrdering
 {
   std::size_t operator()(const SCARPLabelPtr& first,
-                         const SCARPLabelPtr& second) const
-  {
-    assert(first);
-    assert(second);
-
-    return *first < *second;
-  }
+                         const SCARPLabelPtr& second) const;
 };
 
 struct SCARPLabelComparator
 {
   bool operator()(const SCARPLabelPtr& first,
-                  const SCARPLabelPtr& second) const
-  {
-    return *first == *second;
-  }
+                  const SCARPLabelPtr& second) const;
 };
 
 #endif /* SCARP_LABEL_HH */

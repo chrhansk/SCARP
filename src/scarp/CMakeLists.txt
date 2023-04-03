@@ -7,6 +7,7 @@ set(COMMON_SRC
   cost_function.cc
   log.cc
   parameters.cc
+  scarp/scarp_label.cc
   scarp/scarp_program.cc
   dwt/dwt_program.cc
   sur/sur.cc
@@ -39,6 +40,7 @@ set(HEADERS
 add_library(scarp SHARED ${COMMON_SRC})
 
 target_link_libraries(scarp
+  PRIVATE
   ${Boost_LIBRARIES})
 
 target_include_directories(scarp
@@ -50,10 +52,8 @@ target_include_directories(scarp
 
 install(TARGETS scarp
   EXPORT ${PROJECT_NAMESPACE}SCARP
-  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-  INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
   COMPONENT "libraries")
 
 install(FILES ${HEADERS}
@@ -67,13 +67,13 @@ set_target_properties(scarp
 configure_file(defs.hh.in ${CMAKE_BINARY_DIR}/defs.hh)
 
 add_executable(scarp_solver scarp_solver.cc)
-target_link_libraries(scarp_solver scarp)
+target_link_libraries(scarp_solver ${Boost_LIBRARIES} scarp)
 
 add_executable(dwt_solver dwt_solver.cc)
-target_link_libraries(dwt_solver scarp)
+target_link_libraries(dwt_solver ${Boost_LIBRARIES} scarp)
 
 add_executable(sur_solver sur_solver.cc)
-target_link_libraries(sur_solver scarp)
+target_link_libraries(sur_solver ${Boost_LIBRARIES} scarp)
 
 add_executable(solution_tester solution_tester.cc)
-target_link_libraries(solution_tester scarp)
+target_link_libraries(solution_tester ${Boost_LIBRARIES} scarp)

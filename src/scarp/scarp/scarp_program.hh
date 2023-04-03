@@ -19,7 +19,7 @@ class SCARPProgram
 {
 public:
   typedef std::unordered_set<SCARPLabelPtr,
-                             SCARPLabelHash,
+                             SCARPLabelPtrHash,
                              SCARPLabelComparator> LabelSet;
 
   //typedef std::set<LabelPtr, LabelOrdering> LabelSet;

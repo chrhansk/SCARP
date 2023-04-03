@@ -1,21 +1,28 @@
 #include "dwt_program.hh"
 
+#include <boost/container_hash/hash.hpp>
+
 #include "scarp/log.hh"
 
-DWTProgram::DWTProgram(const Controls& fractional_controls,
-                       const CostFunction& costs,
-                       const std::vector<idx>& minimum_dwt,
-                       double scale_factor)
-  : costs(costs),
-    fractional_controls(fractional_controls),
-    size(fractional_controls.num_cells()),
-    dimension(fractional_controls.dimension()),
-    minimum_dwt(minimum_dwt),
-    max_deviation(scale_factor*max_control_deviation(dimension)),
-    fractional_sum(dimension, 0.),
-    iteration(0)
-{
+DWTProgram::DWTProgram(const Controls &fractional_controls,
+                       const CostFunction &costs,
+                       const std::vector<idx> &minimum_dwt, double scale_factor)
+    : costs(costs), fractional_controls(fractional_controls),
+      size(fractional_controls.num_cells()),
+      dimension(fractional_controls.dimension()), minimum_dwt(minimum_dwt),
+      max_deviation(scale_factor * max_control_deviation(dimension)),
+      fractional_sum(dimension, 0.), iteration(0)
+{}
 
+
+std::size_t DWTProgram::ControlSumsHash::operator()(const DWTProgram::ControlSums& control_sums) const
+{
+  std::size_t seed = 0;
+
+  boost::hash_combine(seed,
+                      boost::hash_range(control_sums.begin(), control_sums.end()));
+
+  return seed;
 }
 
 DWTProgram::LabelFront&
