@@ -3,9 +3,9 @@
 
 #include <vector>
 
-#include "matrix.hh"
-#include "cmp.hh"
-#include "util.hh"
+#include "scarp/matrix.hh"
+#include "scarp/cmp.hh"
+#include "scarp/util.hh"
 
 
 class Mesh;

@@ -5,10 +5,10 @@
 
 #include <boost/container_hash/hash.hpp>
 
-#include "bounded_label_set.hh"
-#include "cost_function.hh"
-#include "controls.hh"
-#include "dwt_label.hh"
+#include "scarp/bounded_label_set.hh"
+#include "scarp/cost_function.hh"
+#include "scarp/controls.hh"
+#include "scarp/dwt/dwt_label.hh"
 
 class InfeasibleException : public std::exception{};
 

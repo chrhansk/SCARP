@@ -1,6 +1,6 @@
 #include "sur.hh"
 
-#include "log.hh"
+#include "scarp/log.hh"
 
 #include <cassert>
 

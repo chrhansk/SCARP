@@ -4,8 +4,8 @@
 #include <iostream>
 #include <fstream>
 
-#include "controls.hh"
-#include "instance.hh"
+#include "scarp/controls.hh"
+#include "scarp/instance.hh"
 
 class InstanceReader
 {

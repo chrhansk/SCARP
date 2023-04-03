@@ -1,7 +1,7 @@
 #ifndef HANDLE_HH
 #define HANDLE_HH
 
-#include "util.hh"
+#include "scarp/util.hh"
 
 class Handle
 {

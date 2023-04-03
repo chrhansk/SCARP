@@ -4,13 +4,13 @@ using namespace std;
 #include <boost/program_options.hpp>
 namespace po = boost::program_options;
 
-#include "instance_reader.hh"
-#include "control_writer.hh"
+#include "scarp/instance_reader.hh"
+#include "scarp/control_writer.hh"
 
-#include "log.hh"
-#include "scarp/scarp_program.hh"
+#include "scarp/log.hh"
+#include "scarp/scarp/scarp_program.hh"
 
-#include "sur/sur.hh"
+#include "scarp/sur/sur.hh"
 
 int main(int argc, char **argv)
 {

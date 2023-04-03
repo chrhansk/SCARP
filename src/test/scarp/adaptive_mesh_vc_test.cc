@@ -3,8 +3,8 @@
 #include <gtest/gtest.h>
 
 #include "defs.hh"
-#include "instance.hh"
-#include "log.hh"
+#include "scarp/instance.hh"
+#include "scarp/log.hh"
 
 TEST(SCARPProgram, solve_adaptive)
 {

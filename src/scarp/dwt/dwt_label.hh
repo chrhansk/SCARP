@@ -3,8 +3,8 @@
 
 #include <memory>
 
-#include "label.hh"
-#include "util.hh"
+#include "scarp/label.hh"
+#include "scarp/util.hh"
 
 class DWTLabel;
 

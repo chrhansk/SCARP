@@ -5,9 +5,9 @@
 #include <utility>
 #include <vector>
 
-#include "handle.hh"
-#include "label.hh"
-#include "util.hh"
+#include "scarp/handle.hh"
+#include "scarp/label.hh"
+#include "scarp/util.hh"
 
 class SCARPLabel;
 

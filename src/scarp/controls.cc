@@ -1,9 +1,10 @@
 #include "controls.hh"
-#include "instance.hh"
-#include "util.hh"
 
 #include <cassert>
 #include <cmath>
+
+#include "scarp/instance.hh"
+#include "scarp/util.hh"
 
 bool Controls::are_convex(double eps) const
 {

@@ -4,7 +4,7 @@
 #include <cassert>
 #include <vector>
 
-#include "util.hh"
+#include "scarp/util.hh"
 
 template<class T>
 class Matrix

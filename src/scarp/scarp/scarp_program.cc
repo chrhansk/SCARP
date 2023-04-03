@@ -3,8 +3,8 @@
 #include <algorithm>
 #include <sstream>
 
-#include "cmp.hh"
-#include "log.hh"
+#include "scarp/cmp.hh"
+#include "scarp/log.hh"
 
 
 SCARPProgram::SCARPProgram(const Instance& instance,

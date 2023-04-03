@@ -3,9 +3,9 @@
 #include <boost/algorithm/string.hpp>
 #include <memory>
 
-#include "instance.hh"
-#include "log.hh"
-#include "mesh.hh"
+#include "scarp/instance.hh"
+#include "scarp/log.hh"
+#include "scarp/mesh.hh"
 
 class ReadError : public std::exception
 {

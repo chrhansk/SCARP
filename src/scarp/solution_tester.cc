@@ -5,8 +5,8 @@ using namespace std;
 #include <boost/program_options.hpp>
 namespace po = boost::program_options;
 
-#include "instance_reader.hh"
-#include "log.hh"
+#include "scarp/instance_reader.hh"
+#include "scarp/log.hh"
 
 int main(int argc, char *argv[])
 {

@@ -7,13 +7,13 @@
 #include <unordered_set>
 #include <vector>
 
-#include "scarp_label.hh"
+#include "scarp/scarp/scarp_label.hh"
 
-#include "controls.hh"
-#include "instance.hh"
-#include "parameters.hh"
+#include "scarp/controls.hh"
+#include "scarp/instance.hh"
+#include "scarp/parameters.hh"
 
-#include "cost_function.hh"
+#include "scarp/cost_function.hh"
 
 class SCARPProgram
 {

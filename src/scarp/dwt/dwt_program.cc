@@ -1,6 +1,6 @@
 #include "dwt_program.hh"
 
-#include "log.hh"
+#include "scarp/log.hh"
 
 DWTProgram::DWTProgram(const Controls& fractional_controls,
                        const CostFunction& costs,

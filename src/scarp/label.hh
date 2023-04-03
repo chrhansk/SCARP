@@ -3,7 +3,7 @@
 
 #include <cassert>
 
-#include "util.hh"
+#include "scarp/util.hh"
 
 class Label
 {

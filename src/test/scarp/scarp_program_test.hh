@@ -1,6 +1,6 @@
-#include "scarp/scarp_program.hh"
+#include "scarp/scarp/scarp_program.hh"
 
-#include "parameters.hh"
+#include "scarp/parameters.hh"
 
 #include "test_fixture.hh"
 
