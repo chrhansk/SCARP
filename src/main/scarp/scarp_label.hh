@@ -2,7 +2,10 @@
 #define SCARP_LABEL_HH
 
 #include <boost/container_hash/hash.hpp>
+#include <utility>
+#include <vector>
 
+#include "handle.hh"
 #include "label.hh"
 #include "util.hh"
 
@@ -13,26 +16,26 @@ typedef std::shared_ptr<SCARPLabel> SCARPLabelPtr;
 class SCARPLabel : public Label
 {
 private:
-  SCARPLabelPtr predecessor;
+  Handle predecessor;
 
 public:
   SCARPLabel(idx current_control,
              double cost,
-             SCARPLabelPtr predecessor,
-             idx cell_size = 1)
-    : Label(predecessor->get_control_sums(),
+             Handle predecessor,
+             const std::vector<idx>& control_sums)
+    : Label(control_sums,
             current_control,
             cost),
       predecessor(predecessor)
   {
-    control_sums.at(current_control) += cell_size;
   }
 
   SCARPLabel(idx current_control,
              idx dimension,
              double cost,
              idx cell_size = 1)
-    : Label(std::vector<idx>(dimension, 0), current_control, cost)
+    : Label(std::vector<idx>(dimension, 0), current_control, cost),
+      predecessor(Handle::invalid())
   {
     control_sums.at(current_control) += cell_size;
   }
@@ -64,7 +67,7 @@ public:
     return current_control < other.current_control;
   }
 
-  SCARPLabelPtr get_predecessor() const
+  Handle get_predecessor() const
   {
     return predecessor;
   }

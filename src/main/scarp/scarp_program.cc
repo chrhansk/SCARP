@@ -44,6 +44,9 @@ void SCARPProgram::create_initial_labels()
 {
   iteration = 0;
 
+  predecessors.clear();
+  controls.clear();
+
   current_front().clear();
   next_front().clear();
 
@@ -83,6 +86,10 @@ void SCARPProgram::expand_label(SCARPLabelPtr label)
 
   const idx cell_size = instance.get_mesh().cell_size(iteration);
 
+  Handle handle(predecessors.size());
+  predecessors.push_back(label->get_predecessor());
+  controls.push_back(label->get_current_control());
+
   for(idx next_control = 0; next_control < dimension; ++next_control)
   {
     double next_cost = costs(*label,
@@ -90,10 +97,13 @@ void SCARPProgram::expand_label(SCARPLabelPtr label)
                              iteration,
                              fractional_sum);
 
+    std::vector<idx> next_control_sums = label->get_control_sums();
+    next_control_sums[next_control] += cell_size;
+
     auto next_label = std::make_shared<SCARPLabel>(next_control,
                                                    next_cost,
-                                                   label,
-                                                   cell_size);
+                                                   handle,
+                                                   next_control_sums);
 
     if(!is_feasible(*next_label))
     {
@@ -128,10 +138,14 @@ SCARPProgram::get_controls(SCARPLabelPtr label) const
   std::vector<idx> control_values;
   control_values.reserve(size);
 
-  while(label)
+  control_values.push_back(label->get_current_control());
+
+  Handle handle = label->get_predecessor();
+
+  while(handle)
   {
-    control_values.push_back(label->get_current_control());
-    label = label->get_predecessor();
+    control_values.push_back(controls[handle.value()]);
+    handle = predecessors[handle.value()];
   }
 
   std::reverse(control_values.begin(), control_values.end());
@@ -177,19 +191,6 @@ bool SCARPProgram::is_feasible(const SCARPLabel& label) const
     }
 
     assert(cmp::eq(fraction_total, label_total));
-
-    if(label.get_predecessor())
-    {
-      double pred_sum = 0.;
-
-      for(const auto& value : label.get_predecessor()->get_control_sums())
-      {
-        pred_sum += value;
-      }
-
-      assert(label_total - pred_sum == mesh.cell_size(iteration));
-    }
-
   }
 
   if(vanishing_constraints)
@@ -228,7 +229,7 @@ bool SCARPProgram::check_feasible(const BinaryControls& actual_controls) const
 
   PartialMesh partial_mesh(mesh, actual_size);
 
-  FractionalControls partial_controls = fractional_controls.partial_controls(actual_size);
+  PartialControls partial_controls = fractional_controls.partial_controls(actual_size);
 
   assert(cmp::le(actual_controls.distance(partial_controls, partial_mesh),
                  max_deviation));

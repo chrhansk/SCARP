@@ -104,35 +104,9 @@ bool Controls::satisfy_vanishing_constraints(const Controls& fractional_controls
   return true;
 }
 
-FractionalControls Controls::partial_controls(idx n_cells) const
+PartialControls Controls::partial_controls(idx n_cells) const
 {
-  const idx n = num_cells();
-  const idx m = dimension();
-
-  assert(n_cells <= n);
-
-  FractionalControls partial_controls(n_cells, m);
-
-  for(idx k = 0; k < n_cells; ++k)
-  {
-    for(idx i = 0; i < m; ++i)
-    {
-      partial_controls(k, i) = (*this)(k, i);
-    }
-  }
-
-  if(debugging_enabled())
-  {
-    for(idx k = 0; k < n_cells; ++k)
-    {
-      for(idx i = 0; i < m; ++i)
-      {
-        assert(partial_controls(k, i) == (*this)(k, i));
-      }
-    }
-  }
-
-  return partial_controls;
+  return PartialControls(*this, n_cells);
 }
 
 

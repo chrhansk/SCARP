@@ -10,6 +10,7 @@
 
 class Mesh;
 class FractionalControls;
+class PartialControls;
 
 class Controls
 {
@@ -31,7 +32,37 @@ public:
   double distance(const Controls& other,
                   const Mesh& mesh) const;
 
-  FractionalControls partial_controls(idx n_cells) const;
+  PartialControls partial_controls(idx n_cells) const;
+};
+
+class PartialControls : public Controls
+{
+private:
+  const Controls& controls;
+  const idx n_cells;
+public:
+  PartialControls(const Controls& controls, idx n_cells)
+    : controls(controls),
+      n_cells(n_cells)
+  {
+    assert(n_cells <= controls.num_cells());
+  }
+
+  double operator()(idx i, idx j) const override
+  {
+    assert(i < n_cells);
+    return controls(i, j);
+  }
+
+  const idx num_cells() const override
+  {
+    return n_cells;
+  }
+
+  const idx dimension() const override
+  {
+    return controls.dimension();
+  }
 };
 
 class FractionalControls : public Controls
