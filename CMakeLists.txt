@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.1)
 
-project(SCARP)
+project(SCARP
+  VERSION 0.1.0
+  LANGUAGES CXX)
+
+include(GNUInstallDirs)
 
 set(CMAKE_CXX_STANDARD 14)
 

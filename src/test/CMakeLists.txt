@@ -8,6 +8,7 @@ add_library(test_common ${TEST_COMMON_SRC})
 
 target_link_libraries(test_common
   PUBLIC
+  scarp
   GTest::GTest)
 
 function(add_unit_test TEST_NAME)
@@ -15,8 +16,7 @@ function(add_unit_test TEST_NAME)
   add_executable(${BASE_NAME} ${TEST_NAME}.cc)
 
   target_link_libraries(${BASE_NAME}
-    test_common
-    common)
+    test_common)
 
   add_dependencies(build_tests ${BASE_NAME})
 
