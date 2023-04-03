@@ -228,7 +228,7 @@ bool SCARPProgram::check_feasible(const BinaryControls& actual_controls) const
 
   PartialMesh partial_mesh(mesh, actual_size);
 
-  FractionalControls partial_controls = fractional_controls.partial_controls(actual_size);
+  PartialControls partial_controls = fractional_controls.partial_controls(actual_size);
 
   assert(cmp::le(actual_controls.distance(partial_controls, partial_mesh),
                  max_deviation));
