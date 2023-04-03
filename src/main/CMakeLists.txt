@@ -42,6 +42,7 @@ target_include_directories(scarp
   PUBLIC
   "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>"
   "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
+  ${BOOST_INCLUDE_DIRS}
 )
 
 install(TARGETS scarp

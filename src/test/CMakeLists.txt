@@ -6,6 +6,11 @@ set(TEST_COMMON_SRC
 
 add_library(test_common ${TEST_COMMON_SRC})
 
+target_include_directories(test_common
+    PUBLIC
+    ${CMAKE_SOURCE_DIR}
+    ${CMAKE_BINARY_DIR})
+
 target_link_libraries(test_common
   PUBLIC
   scarp

@@ -30,12 +30,8 @@ find_package(Boost 1.54
 
 add_definitions(-DBOOST_LOG_DYN_LINK)
 
-include_directories(${BOOST_INCLUDE_DIRS})
-
 if(CMAKE_BUILD_TYPE MATCHES "Release")
   add_definitions("-DNDEBUG")
 endif()
-
-include_directories(${CMAKE_BINARY_DIR}/)
 
 add_subdirectory(src)
