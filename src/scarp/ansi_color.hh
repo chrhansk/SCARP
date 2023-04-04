@@ -21,8 +21,8 @@
  *
  */
 
-#ifndef ANSI_COLOR_HH
-#define ANSI_COLOR_HH
+#ifndef SCARP_ANSI_COLOR_HH
+#define SCARP_ANSI_COLOR_HH
 
 #include <iostream>
 #include <string>
@@ -140,4 +140,4 @@ namespace std {
   { return __os << scarp::ansi::reset << std::endl; }
 }
 
-#endif // define ANSI_COLOR_HH
+#endif // define SCARP_ANSI_COLOR_HH

@@ -1,5 +1,5 @@
-#ifndef LABEL_HH
-#define LABEL_HH
+#ifndef SCARP_LABEL_HH
+#define SCARP_LABEL_HH
 
 #include <cassert>
 
@@ -49,4 +49,4 @@ public:
 
 } // namespace scarp
 
-#endif /* LABEL_HH */
+#endif /* SCARP_LABEL_HH */

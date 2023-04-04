@@ -1,5 +1,5 @@
-#ifndef UTIL_HH
-#define UTIL_HH
+#ifndef SCARP_UTIL_HH
+#define SCARP_UTIL_HH
 
 #include <vector>
 
@@ -21,4 +21,4 @@ constexpr bool debugging_enabled()
 
 } // namespace scarp
 
-#endif /* UTIL_HH */
+#endif /* SCARP_UTIL_HH */

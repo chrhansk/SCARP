@@ -1,5 +1,5 @@
-#ifndef DWT_PROGRAM_HH
-#define DWT_PROGRAM_HH
+#ifndef SCARP_DWT_PROGRAM_HH
+#define SCARP_DWT_PROGRAM_HH
 
 #include <unordered_map>
 
@@ -89,4 +89,4 @@ public:
 
 } // namespace scarp
 
-#endif /* DWT_PROGRAM_HH */
+#endif /* SCARP_DWT_PROGRAM_HH */

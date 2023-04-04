@@ -1,5 +1,5 @@
-#ifndef ADAPTIVE_PROGRAM_TEST_HH
-#define ADAPTIVE_PROGRAM_TEST_HH
+#ifndef SCARP_ADAPTIVE_PROGRAM_TEST_HH
+#define SCARP_ADAPTIVE_PROGRAM_TEST_HH
 
 #include "scarp_program_test.hh"
 
@@ -11,4 +11,4 @@ public:
 };
 
 
-#endif /* ADAPTIVE_PROGRAM_TEST_HH */
+#endif /* SCARP_ADAPTIVE_PROGRAM_TEST_HH */

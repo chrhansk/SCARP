@@ -1,5 +1,5 @@
-#ifndef MESH_HH
-#define MESH_HH
+#ifndef SCARP_MESH_HH
+#define SCARP_MESH_HH
 
 #include <cassert>
 #include <vector>
@@ -94,4 +94,4 @@ public:
 
 } // namespace scarp
 
-#endif /* MESH_HH */
+#endif /* SCARP_MESH_HH */

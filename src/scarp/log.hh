@@ -1,5 +1,5 @@
-#ifndef LOG_HH
-#define LOG_HH
+#ifndef SCARP_LOG_HH
+#define SCARP_LOG_HH
 
 #include <boost/log/trivial.hpp>
 
@@ -12,4 +12,4 @@ void log_init(bool quiet=false);
 
 } // namespace scarp
 
-#endif /* LOG_HH */
+#endif /* SCARP_LOG_HH */

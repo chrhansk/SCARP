@@ -1,5 +1,5 @@
-#ifndef TEST_FIXTURE_HH
-#define TEST_FIXTURE_HH
+#ifndef SCARP_TEST_FIXTURE_HH
+#define SCARP_TEST_FIXTURE_HH
 
 #include <boost/filesystem.hpp>
 
@@ -27,4 +27,4 @@ public:
 };
 
 
-#endif /* TEST_FIXTURE_HH */
+#endif /* SCARP_TEST_FIXTURE_HH */

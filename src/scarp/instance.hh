@@ -1,5 +1,5 @@
-#ifndef INSTANCE_HH
-#define INSTANCE_HH
+#ifndef SCARP_INSTANCE_HH
+#define SCARP_INSTANCE_HH
 
 #include <cassert>
 #include <memory>
@@ -60,4 +60,4 @@ public:
 
 } // namespace scarp
 
-#endif /* INSTANCE_HH */
+#endif /* SCARP_INSTANCE_HH */

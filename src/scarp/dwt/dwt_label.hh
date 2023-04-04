@@ -1,5 +1,5 @@
-#ifndef DWT_LABEL_HH
-#define DWT_LABEL_HH
+#ifndef SCARP_DWT_LABEL_HH
+#define SCARP_DWT_LABEL_HH
 
 #include <memory>
 
@@ -99,4 +99,4 @@ public:
 
 } // namespace scarp
 
-#endif /* DWT_LABEL_HH */
+#endif /* SCARP_DWT_LABEL_HH */

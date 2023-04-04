@@ -1,5 +1,5 @@
-#ifndef PARAMETERS_HH
-#define PARAMETERS_HH
+#ifndef SCARP_PARAMETERS_HH
+#define SCARP_PARAMETERS_HH
 
 #include <vector>
 #include "util.hh"
@@ -13,4 +13,4 @@ std::vector<double> default_switch_off_costs(idx dimension);
 
 } // namespace scarp
 
-#endif /* PARAMETERS_HH */
+#endif /* SCARP_PARAMETERS_HH */

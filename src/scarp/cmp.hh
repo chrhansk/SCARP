@@ -1,5 +1,5 @@
-#ifndef CMP_HH
-#define CMP_HH
+#ifndef SCARP_CMP_HH
+#define SCARP_CMP_HH
 
 #include <cmath>
 
@@ -108,4 +108,4 @@ namespace cmp
 
 } // namespace scarp
 
-#endif /* CMP_HH */
+#endif /* SCARP_CMP_HH */

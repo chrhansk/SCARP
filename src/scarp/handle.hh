@@ -1,5 +1,5 @@
-#ifndef HANDLE_HH
-#define HANDLE_HH
+#ifndef SCARP_HANDLE_HH
+#define SCARP_HANDLE_HH
 
 #include "scarp/util.hh"
 
@@ -34,4 +34,4 @@ public:
 
 } // namespace scarp
 
-#endif /* HANDLE_HH */
+#endif /* SCARP_HANDLE_HH */
