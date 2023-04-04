@@ -6,6 +6,7 @@ set(COMMON_SRC
   controls.cc
   cost_function.cc
   log.cc
+  mesh.cc
   parameters.cc
   scarp/scarp_label.cc
   scarp/scarp_program.cc
