@@ -28,6 +28,7 @@ set(HEADERS
   controls.hh
   cost_function.hh
   bounds.hh
+  error.hh
   handle.hh
   instance.hh
   instance_reader.hh

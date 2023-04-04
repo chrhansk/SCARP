@@ -4,6 +4,7 @@
 #include <sstream>
 
 #include "scarp/cmp.hh"
+#include "scarp/error.hh"
 #include "scarp/log.hh"
 
 namespace scarp
@@ -303,6 +304,11 @@ BinaryControls SCARPProgram::solve()
         min_label = label;
       }
     }
+  }
+
+  if(min_costs == inf)
+  {
+    throw InfeasibleException();
   }
 
   auto min_controls = get_controls(min_label);
