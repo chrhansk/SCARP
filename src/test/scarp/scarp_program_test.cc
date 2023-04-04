@@ -1,6 +1,6 @@
-#include "scarp_program_test.hh"
+#include "scarp/scarp_program_test.hh"
 
-#include "cost_function.hh"
+#include "scarp/cost_function.hh"
 
 double SCARPProgramTest::execute(const Instance& instance,
                                  const CostFunction& costs,

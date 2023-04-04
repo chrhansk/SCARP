@@ -7,11 +7,11 @@
 
 #include <gtest/gtest.h>
 
-#include "parameters.hh"
+#include "scarp/parameters.hh"
 
-#include "instance_reader.hh"
+#include "scarp/instance_reader.hh"
 
-#include "cmp.hh"
+#include "scarp/cmp.hh"
 
 void ProgramTest::execute_all(const fs::path& result_path, bool adaptive, bool vanishing_constraints)
 {

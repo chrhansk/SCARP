@@ -1,6 +1,14 @@
 cmake_minimum_required(VERSION 3.1)
 
-project(SCARP)
+project(SCARP
+  VERSION 0.1.0
+  LANGUAGES CXX)
+
+string(TOLOWER ${PROJECT_NAME} project_name)
+
+include(GNUInstallDirs)
+
+set(PROJECT_NAMESPACE "${project_name}::")
 
 set(CMAKE_CXX_STANDARD 14)
 
@@ -16,7 +24,17 @@ FetchContent_Declare(
   GIT_TAG        release-1.12.1
 )
 
-FetchContent_MakeAvailable(googletest)
+FetchContent_GetProperties(googletest)
+if(NOT googletest_POPULATED)
+  FetchContent_Populate(googletest)
+
+  add_subdirectory(
+    ${googletest_SOURCE_DIR}
+    ${googletest_BINARY_DIR}
+    EXCLUDE_FROM_ALL
+  )
+endif()
+
 add_library(GTest::GTest INTERFACE IMPORTED)
 target_link_libraries(GTest::GTest INTERFACE gtest_main)
 
@@ -26,12 +44,38 @@ find_package(Boost 1.54
 
 add_definitions(-DBOOST_LOG_DYN_LINK)
 
-include_directories(${BOOST_INCLUDE_DIRS})
-
 if(CMAKE_BUILD_TYPE MATCHES "Release")
   add_definitions("-DNDEBUG")
 endif()
 
-include_directories(${CMAKE_BINARY_DIR}/)
-
 add_subdirectory(src)
+
+set(CONFIG_FILE "${CMAKE_SOURCE_DIR}/cmake/${project_name}-config.cmake")
+set(CONFIG_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/${project_name}-config-version.cmake")
+set(CONFIG_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${project_name}")
+
+set(TARGET_FILE "${project_name}-targets.cmake")
+
+install(EXPORT ${PROJECT_NAMESPACE}SCARP
+  FILE ${TARGET_FILE}
+  NAMESPACE
+  ${PROJECT_NAMESPACE}
+  DESTINATION
+  ${CONFIG_DESTINATION}
+  COMPONENT "libraries"
+)
+
+write_basic_package_version_file(
+  ${CONFIG_VERSION_FILE}
+  VERSION ${PROJECT_VERSION}
+  COMPATIBILITY SameMajorVersion
+)
+
+install(
+  FILES
+  ${CONFIG_FILE}
+  ${CONFIG_VERSION_FILE}
+  DESTINATION
+  ${CONFIG_DESTINATION}
+  COMPONENT "libraries"
+)

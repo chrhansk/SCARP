@@ -6,8 +6,15 @@ set(TEST_COMMON_SRC
 
 add_library(test_common ${TEST_COMMON_SRC})
 
+target_include_directories(test_common
+  PUBLIC
+  ${SCARP_DIR}
+  ${CMAKE_BINARY_DIR})
+
 target_link_libraries(test_common
   PUBLIC
+  scarp
+  ${Boost_LIBRARIES}
   GTest::GTest)
 
 function(add_unit_test TEST_NAME)
@@ -15,8 +22,7 @@ function(add_unit_test TEST_NAME)
   add_executable(${BASE_NAME} ${TEST_NAME}.cc)
 
   target_link_libraries(${BASE_NAME}
-    test_common
-    common)
+    test_common)
 
   add_dependencies(build_tests ${BASE_NAME})
 

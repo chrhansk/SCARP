@@ -5,9 +5,11 @@
 
 namespace fs = boost::filesystem;
 
-#include "instance.hh"
+#include "scarp/instance.hh"
 
-#include "cost_function.hh"
+#include "scarp/cost_function.hh"
+
+using namespace scarp;
 
 class ProgramTest
 {
