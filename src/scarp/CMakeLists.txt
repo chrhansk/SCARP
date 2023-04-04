@@ -1,6 +1,7 @@
 set(COMMON_SRC
   ansi_color.cc
   cmp.cc
+  deviation_bound.cc
   instance_reader.cc
   control_writer.cc
   controls.cc
@@ -26,6 +27,7 @@ set(HEADERS
   control_writer.hh
   controls.hh
   cost_function.hh
+  deviation_bound.hh
   handle.hh
   instance.hh
   instance_reader.hh
