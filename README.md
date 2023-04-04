@@ -12,7 +12,7 @@ appropriately defined graph. This implementation supplements the article
 
 You will need to satisfy the following dependencies in order to compile SCARP
 
-- A `C++` compiler supporting `C++11`, such as [gcc](https://gcc.gnu.org/) or [clang](https://clang.llvm.org/)
+- A `C++` compiler supporting `C++14`, such as [gcc](https://gcc.gnu.org/) or [clang](https://clang.llvm.org/)
 - [CMake](https://cmake.org/) `>= 3.1`
 - [Boost](https://www.boost.org/) `>= 1.54`
 
