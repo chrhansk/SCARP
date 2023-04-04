@@ -70,7 +70,7 @@ private:
 public:
   SCARPProgram(const Instance& instance,
                const CostFunction& costs,
-               double scale_factor = 1.,
+               double max_deviation,
                bool vanishing_constraints = false);
 
   BinaryControls solve();

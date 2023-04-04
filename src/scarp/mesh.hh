@@ -14,6 +14,9 @@ class Mesh
 public:
   virtual idx cell_size(idx index) const = 0;
   virtual idx num_cells() const = 0;
+
+  // coarseness, i.e., max cell size
+  virtual idx coarseness() const;
 };
 
 class UniformMesh : public Mesh
@@ -25,6 +28,11 @@ public:
   {}
 
   idx cell_size(idx index) const override
+  {
+    return 1;
+  }
+
+  idx coarseness() const override
   {
     return 1;
   }

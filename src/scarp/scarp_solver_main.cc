@@ -5,6 +5,7 @@ using namespace std;
 #include <boost/program_options.hpp>
 namespace po = boost::program_options;
 
+#include "scarp/bounds.hh"
 #include "scarp/instance_reader.hh"
 #include "scarp/control_writer.hh"
 
@@ -74,6 +75,9 @@ int main(int argc, char **argv)
 
   const idx dimension = controls.dimension();
 
+  const double max_deviation = bounds::sur(dimension, vanishing_constraints).for_mesh(instance.get_mesh(),
+                                                                                      scale_factor);
+
   std::vector<double> switch_on_costs = default_switch_on_costs(dimension);
   std::vector<double> switch_off_costs = default_switch_off_costs(dimension);
 
@@ -85,7 +89,7 @@ int main(int argc, char **argv)
 
     SCARPProgram program(instance,
                          sur_costs,
-                         scale_factor,
+                         max_deviation,
                          vanishing_constraints);
 
     if(collect_all)
@@ -106,7 +110,7 @@ int main(int argc, char **argv)
 
     SCARPProgram program(instance,
                          switch_costs,
-                         scale_factor,
+                         max_deviation,
                          vanishing_constraints);
 
     if(collect_all)

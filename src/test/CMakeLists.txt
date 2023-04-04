@@ -2,7 +2,8 @@ add_custom_target(build_tests)
 
 set(TEST_COMMON_SRC
   test_fixture.cc
-  scarp/scarp_program_test.cc)
+  scarp/scarp_program_test.cc
+  scarp/adaptive_program_test.cc)
 
 add_library(test_common ${TEST_COMMON_SRC})
 

@@ -1,5 +1,6 @@
 #include "scarp/scarp_program_test.hh"
 
+#include "scarp/bounds.hh"
 #include "scarp/cost_function.hh"
 
 double SCARPProgramTest::execute(const Instance& instance,
@@ -7,11 +8,13 @@ double SCARPProgramTest::execute(const Instance& instance,
                                  bool vanishing_constraints)
 {
   const FractionalControls& fractional_controls = instance.get_fractional_controls();
-  const idx dimension = fractional_controls.dimension();
+
+
+  const double max_deviation = bound_for(instance, vanishing_constraints);
 
   SCARPProgram program(instance,
                        costs,
-                       scale_factor,
+                       max_deviation,
                        vanishing_constraints);
 
   auto controls = program.solve();
@@ -26,4 +29,13 @@ double SCARPProgramTest::execute(const Instance& instance,
   assert(cmp::eq(distance, sur_cost));
 
   return costs.total_cost(controls, fractional_controls);
+}
+
+double SCARPProgramTest::bound_for(const Instance& instance,
+                                   bool vanishing_constraints) const
+{
+  const idx dimension = instance.dimension();
+
+  return bounds::sur(dimension, vanishing_constraints).for_mesh(instance.get_mesh(),
+                                                                scale_factor);
 }

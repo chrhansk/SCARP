@@ -11,7 +11,7 @@ namespace scarp
 
 SCARPProgram::SCARPProgram(const Instance& instance,
                            const CostFunction& costs,
-                           double scale_factor,
+                           double max_deviation,
                            bool vanishing_constraints)
   : costs(costs),
     num_labels(0),
@@ -21,7 +21,7 @@ SCARPProgram::SCARPProgram(const Instance& instance,
     vanishing_constraints(vanishing_constraints),
     size(fractional_controls.num_cells()),
     dimension(fractional_controls.dimension()),
-    max_deviation(scale_factor*max_control_deviation(dimension)),
+    max_deviation(max_deviation),
     fractional_sum(dimension, 0.),
     iteration(0)
 {
