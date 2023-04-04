@@ -6,13 +6,11 @@
 #include "scarp/bounded_label_set.hh"
 #include "scarp/cost_function.hh"
 #include "scarp/controls.hh"
+#include "scarp/error.hh"
 #include "scarp/dwt/dwt_label.hh"
 
 namespace scarp
 {
-
-class InfeasibleException : public std::exception{};
-
 class DWTProgram
 {
 private:
