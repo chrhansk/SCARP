@@ -6,6 +6,9 @@
 
 #include "controls.hh"
 
+namespace scarp
+{
+
 class ControlWriter
 {
 public:
@@ -16,5 +19,6 @@ public:
                  const Controls& controls);
 };
 
+}
 
 #endif /* CONTROL_WRITER_HH */

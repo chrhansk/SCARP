@@ -2,6 +2,9 @@
 
 #include <cassert>
 
+namespace scarp
+{
+
 std::vector<double> default_switch_on_costs(idx dimension)
 {
   std::vector<double> switch_on_costs{2., 1.};
@@ -36,3 +39,5 @@ std::vector<double> default_switch_off_costs(idx dimension)
 
   return switch_off_costs;
 }
+
+} // namespace scarp

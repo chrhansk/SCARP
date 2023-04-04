@@ -7,6 +7,9 @@
 
 #include "util.hh"
 
+namespace scarp
+{
+
 template <class Label, class Costs, class Lengths>
 class BoundedLabelSet
 {
@@ -176,5 +179,6 @@ BoundedLabelSet<Label, Costs, Lengths>::is_dominated(std::shared_ptr<Label> labe
   return false;
 }
 
+} // namespace scarp
 
 #endif /* BOUNDED_LABEL_SET_HH */

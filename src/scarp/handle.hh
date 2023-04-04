@@ -3,6 +3,9 @@
 
 #include "scarp/util.hh"
 
+namespace scarp
+{
+
 class Handle
 {
 private:
@@ -28,5 +31,7 @@ public:
     return Handle((idx) -1);
   }
 };
+
+} // namespace scarp
 
 #endif /* HANDLE_HH */

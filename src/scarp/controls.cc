@@ -6,6 +6,9 @@
 #include "scarp/instance.hh"
 #include "scarp/util.hh"
 
+namespace scarp
+{
+
 bool Controls::are_convex(double eps) const
 {
   for(idx i = 0; i < num_cells(); ++i)
@@ -170,3 +173,5 @@ double max_control_deviation(idx dimension)
 
   return max_deviation;
 }
+
+} // namespace scarp

@@ -2,7 +2,12 @@
 
 #include <unistd.h>   // For isatty
 
-namespace ansi
+namespace scarp
 {
-  const bool can_colorize(isatty(STDOUT_FILENO));
-}
+
+  namespace ansi
+  {
+    const bool can_colorize(isatty(STDOUT_FILENO));
+  }
+
+} // namespace scarp

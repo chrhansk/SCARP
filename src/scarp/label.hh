@@ -5,6 +5,9 @@
 
 #include "scarp/util.hh"
 
+namespace scarp
+{
+
 class Label
 {
 protected:
@@ -43,5 +46,7 @@ public:
     return cost;
   }
 };
+
+} // namespace scarp
 
 #endif /* LABEL_HH */

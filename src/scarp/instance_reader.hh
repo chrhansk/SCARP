@@ -7,6 +7,9 @@
 #include "scarp/controls.hh"
 #include "scarp/instance.hh"
 
+namespace scarp
+{
+
 class InstanceReader
 {
 private:
@@ -19,5 +22,6 @@ public:
   Instance read(std::istream& input, bool adaptive);
 };
 
+} // namespace scarp
 
 #endif /* INSTANCE_READER_HH */

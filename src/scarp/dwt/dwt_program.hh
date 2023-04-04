@@ -8,6 +8,9 @@
 #include "scarp/controls.hh"
 #include "scarp/dwt/dwt_label.hh"
 
+namespace scarp
+{
+
 class InfeasibleException : public std::exception{};
 
 class DWTProgram
@@ -84,5 +87,6 @@ public:
   BinaryControls solve();
 };
 
+} // namespace scarp
 
 #endif /* DWT_PROGRAM_HH */

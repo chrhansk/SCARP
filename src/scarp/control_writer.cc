@@ -1,5 +1,8 @@
 #include "control_writer.hh"
 
+namespace scarp
+{
+
 void ControlWriter::write(std::ostream& output,
                           const Controls& controls)
 {
@@ -64,3 +67,5 @@ void ControlWriter::writeAMPL(std::ostream& output,
   output << ";" << std::endl;
 
 }
+
+} // namespace scarp

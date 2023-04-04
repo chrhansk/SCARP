@@ -9,6 +9,9 @@
 #include "scarp/label.hh"
 #include "scarp/util.hh"
 
+namespace scarp
+{
+
 class SCARPLabel;
 
 typedef std::shared_ptr<SCARPLabel> SCARPLabelPtr;
@@ -94,5 +97,7 @@ struct SCARPLabelComparator
   bool operator()(const SCARPLabelPtr& first,
                   const SCARPLabelPtr& second) const;
 };
+
+} // namespace scarp
 
 #endif /* SCARP_LABEL_HH */

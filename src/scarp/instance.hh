@@ -7,6 +7,9 @@
 #include "controls.hh"
 #include "mesh.hh"
 
+namespace scarp
+{
+
 class Instance
 {
 private:
@@ -54,5 +57,7 @@ public:
   }
 
 };
+
+} // namespace scarp
 
 #endif /* INSTANCE_HH */

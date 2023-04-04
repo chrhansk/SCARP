@@ -6,6 +6,9 @@
 #include "scarp/label.hh"
 #include "scarp/util.hh"
 
+namespace scarp
+{
+
 class DWTLabel;
 
 typedef std::shared_ptr<DWTLabel> DWTLabelPtr;
@@ -93,5 +96,7 @@ public:
   }
 
 };
+
+} // namespace scarp
 
 #endif /* DWT_LABEL_HH */

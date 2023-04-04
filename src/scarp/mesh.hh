@@ -6,6 +6,9 @@
 
 #include "scarp/util.hh"
 
+namespace scarp
+{
+
 class Mesh
 {
 public:
@@ -80,5 +83,7 @@ public:
     return n_cells;
   }
 };
+
+} // namespace scarp
 
 #endif /* MESH_HH */

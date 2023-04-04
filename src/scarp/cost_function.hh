@@ -7,6 +7,9 @@
 #include "instance.hh"
 #include "label.hh"
 
+namespace scarp
+{
+
 class CostFunction
 {
 protected:
@@ -73,5 +76,7 @@ public:
                     idx next_cell_index,
                     const std::vector<double>& fractional_control_sums) const override;
 };
+
+} // namespace scarp
 
 #endif /* COST_FUNCTION_HH */

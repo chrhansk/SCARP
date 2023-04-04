@@ -4,6 +4,9 @@
 
 #include "scarp/log.hh"
 
+namespace scarp
+{
+
 DWTProgram::DWTProgram(const Controls &fractional_controls,
                        const CostFunction &costs,
                        const std::vector<idx> &minimum_dwt, double scale_factor)
@@ -255,3 +258,5 @@ BinaryControls DWTProgram::solve()
 
   return min_controls;
 }
+
+} // namespace scarp

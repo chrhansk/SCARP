@@ -15,6 +15,9 @@
 
 #include "scarp/cost_function.hh"
 
+namespace scarp
+{
+
 class SCARPProgram
 {
 public:
@@ -75,5 +78,6 @@ public:
   std::vector<BinaryControls> solve_all();
 };
 
+} // namespace scarp
 
 #endif /* SCARP_PROGRAM_HH */

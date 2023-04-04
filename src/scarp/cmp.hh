@@ -3,6 +3,9 @@
 
 #include <cmath>
 
+namespace scarp
+{
+
 namespace cmp
 {
   extern double eps;
@@ -102,5 +105,7 @@ namespace cmp
   }
 
 }
+
+} // namespace scarp
 
 #endif /* CMP_HH */

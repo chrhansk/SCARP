@@ -7,6 +7,9 @@
 #include "scarp/log.hh"
 #include "scarp/mesh.hh"
 
+namespace scarp
+{
+
 class ReadError : public std::exception
 {
 	const char* what () const throw()
@@ -188,3 +191,5 @@ Instance InstanceReader::read(std::istream &input, bool adaptive)
     return read_uniform(input);
   }
 }
+
+} // namespace scarp

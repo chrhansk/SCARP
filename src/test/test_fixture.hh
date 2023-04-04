@@ -9,6 +9,8 @@ namespace fs = boost::filesystem;
 
 #include "scarp/cost_function.hh"
 
+using namespace scarp;
+
 class ProgramTest
 {
 protected:

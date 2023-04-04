@@ -10,6 +10,8 @@ namespace po = boost::program_options;
 #include "log.hh"
 #include "dwt/dwt_program.hh"
 
+using namespace scarp;
+
 int main(int argc, char **argv)
 {
   log_init();

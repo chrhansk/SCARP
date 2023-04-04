@@ -2,6 +2,9 @@
 
 #include <boost/container_hash/hash.hpp>
 
+namespace scarp
+{
+
 std::size_t SCARPLabelHash::operator()(const SCARPLabel& label) const
 {
   std::size_t seed = 0;
@@ -35,3 +38,5 @@ bool SCARPLabelComparator::operator()(const SCARPLabelPtr& first,
 {
   return *first == *second;
 }
+
+} // namespace scarp

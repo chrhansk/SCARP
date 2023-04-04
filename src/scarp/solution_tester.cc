@@ -8,6 +8,8 @@ namespace po = boost::program_options;
 #include "scarp/instance_reader.hh"
 #include "scarp/log.hh"
 
+using namespace scarp;
+
 int main(int argc, char *argv[])
 {
   log_init();

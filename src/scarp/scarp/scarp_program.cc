@@ -6,6 +6,8 @@
 #include "scarp/cmp.hh"
 #include "scarp/log.hh"
 
+namespace scarp
+{
 
 SCARPProgram::SCARPProgram(const Instance& instance,
                            const CostFunction& costs,
@@ -397,3 +399,5 @@ std::vector<BinaryControls> SCARPProgram::solve_all()
 
   return all_controls;
 }
+
+} // namespace scarp

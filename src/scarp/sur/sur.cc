@@ -4,6 +4,9 @@
 
 #include <cassert>
 
+namespace scarp
+{
+
 BinaryControls compute_sur_controls(const Instance& instance,
                                     bool vanishing_constraints,
                                     double eps)
@@ -84,3 +87,5 @@ BinaryControls compute_sur_controls(const Instance& instance,
 
   return sur_controls;
 }
+
+} // namespace scarp

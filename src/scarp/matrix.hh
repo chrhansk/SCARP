@@ -6,6 +6,9 @@
 
 #include "scarp/util.hh"
 
+namespace scarp
+{
+
 template<class T>
 class Matrix
 {
@@ -55,8 +58,8 @@ public:
 
     return values.at(index(i, j));
   }
-
-
 };
+
+} // namespace scarp
 
 #endif /* MATRIX_HH */

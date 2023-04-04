@@ -27,6 +27,9 @@
 #include <iostream>
 #include <string>
 
+namespace scarp
+{
+
 /**
  * Definition of the public functions. It is a "define" in which for every
  * color it implements a pair of inline functions like:
@@ -114,6 +117,7 @@ namespace ansi {
   ANSI_COLOR_IMPLEMENT_WITH_BG(white, 5)
 }
 
+} // namespace scarp
 
 /**
  * Helper functions injected into the std namespace to help with resetting
@@ -128,13 +132,12 @@ namespace std {
   template<typename _CharT, typename _Traits>
   inline basic_ostream<_CharT, _Traits>&
   endc(basic_ostream<_CharT, _Traits>& __os)
-  { return __os << ansi::reset; }
+  { return __os << scarp::ansi::reset; }
 
   template<typename _CharT, typename _Traits>
   inline basic_ostream<_CharT, _Traits>&
   endlc(basic_ostream<_CharT, _Traits>& __os)
-  { return __os << ansi::reset << std::endl; }
-
+  { return __os << scarp::ansi::reset << std::endl; }
 }
 
 #endif // define ANSI_COLOR_HH

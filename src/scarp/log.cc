@@ -25,6 +25,9 @@ namespace keywords = boost::log::keywords;
 #include "util.hh"
 #include "ansi_color.hh"
 
+namespace scarp
+{
+
 namespace {
   struct null_deleter {
     void operator()(void const *) const {}
@@ -109,3 +112,5 @@ void log_init(bool quiet)
 
   core->add_sink(sink);
 }
+
+} // namespace scarp

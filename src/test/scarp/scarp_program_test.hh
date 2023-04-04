@@ -4,6 +4,8 @@
 
 #include "test_fixture.hh"
 
+using namespace scarp;
+
 class SCARPProgramTest : public ProgramTest
 {
 private:

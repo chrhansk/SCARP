@@ -7,6 +7,8 @@
 #include "scarp/cmp.hh"
 #include "scarp/util.hh"
 
+namespace scarp
+{
 
 class Mesh;
 class FractionalControls;
@@ -112,5 +114,7 @@ public:
 };
 
 double max_control_deviation(idx dimension);
+
+} // namespace scarp
 
 #endif /* CONTROLS_HH */

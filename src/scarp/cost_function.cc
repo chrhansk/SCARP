@@ -2,6 +2,9 @@
 
 #include <stdexcept>
 
+namespace scarp
+{
+
 double CostFunction::total_cost(const Controls& controls,
                                 const Controls& fractional_controls) const
 {
@@ -172,3 +175,5 @@ double SURCosts::operator()(const Label& previous_label,
 
   return next_cost;
 }
+
+} // namespace scarp

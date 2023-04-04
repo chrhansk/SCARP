@@ -12,6 +12,8 @@ namespace po = boost::program_options;
 
 #include "scarp/sur/sur.hh"
 
+using namespace scarp;
+
 int main(int argc, char **argv)
 {
   log_init();
