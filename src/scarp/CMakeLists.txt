@@ -1,7 +1,7 @@
 set(COMMON_SRC
   ansi_color.cc
   cmp.cc
-  deviation_bound.cc
+  bounds.cc
   instance_reader.cc
   control_writer.cc
   controls.cc
@@ -27,7 +27,7 @@ set(HEADERS
   control_writer.hh
   controls.hh
   cost_function.hh
-  deviation_bound.hh
+  bounds.hh
   handle.hh
   instance.hh
   instance_reader.hh
@@ -72,14 +72,11 @@ set_target_properties(scarp
 
 configure_file(defs.hh.in ${CMAKE_BINARY_DIR}/defs.hh)
 
-add_executable(scarp_solver scarp_solver.cc)
+add_executable(scarp_solver scarp_solver_main.cc)
 target_link_libraries(scarp_solver ${Boost_LIBRARIES} scarp)
 
-add_executable(dwt_solver dwt_solver.cc)
+add_executable(dwt_solver dwt_solver_main.cc)
 target_link_libraries(dwt_solver ${Boost_LIBRARIES} scarp)
 
-add_executable(sur_solver sur_solver.cc)
+add_executable(sur_solver sur_solver_main.cc)
 target_link_libraries(sur_solver ${Boost_LIBRARIES} scarp)
-
-add_executable(solution_tester solution_tester.cc)
-target_link_libraries(solution_tester ${Boost_LIBRARIES} scarp)

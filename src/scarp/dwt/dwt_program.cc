@@ -9,12 +9,15 @@ namespace scarp
 
 DWTProgram::DWTProgram(const Controls &fractional_controls,
                        const CostFunction &costs,
-                       const std::vector<idx> &minimum_dwt, double scale_factor)
+                       const std::vector<idx> &minimum_dwt,
+                       double max_deviation)
     : costs(costs), fractional_controls(fractional_controls),
       size(fractional_controls.num_cells()),
-      dimension(fractional_controls.dimension()), minimum_dwt(minimum_dwt),
-      max_deviation(scale_factor * max_control_deviation(dimension)),
-      fractional_sum(dimension, 0.), iteration(0)
+      dimension(fractional_controls.dimension()),
+      minimum_dwt(minimum_dwt),
+      max_deviation(max_deviation),
+      fractional_sum(dimension, 0.),
+      iteration(0)
 {}
 
 

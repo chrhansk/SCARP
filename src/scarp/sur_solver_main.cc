@@ -7,6 +7,7 @@ namespace po = boost::program_options;
 #include "scarp/instance_reader.hh"
 #include "scarp/control_writer.hh"
 
+#include "scarp/bounds.hh"
 #include "scarp/log.hh"
 #include "scarp/scarp/scarp_program.hh"
 
@@ -88,8 +89,11 @@ int main(int argc, char **argv)
 
     const double total_switch_costs = switch_costs.total_cost(sur_controls, fractional_controls);
 
+    const double max_deviation = bounds::sur(dimension, vanishing_constraints).for_mesh(instance.get_mesh(),
+                                                                                        scale_factor);
+
     Log(info) << "SUR costs of rounded controls: " << total_control_costs
-              << ", upper bound: " << max_control_deviation(dimension)
+              << ", upper bound: " << max_deviation
               << ", switching cost: " << total_switch_costs;
 
   }

@@ -162,16 +162,4 @@ const idx BinaryControls::dimension() const
   return dim;
 }
 
-double max_control_deviation(idx dimension)
-{
-  double max_deviation = 0.;
-
-  for(idx i = 2; i <= dimension; ++i)
-  {
-    max_deviation += 1. / (double(i));
-  }
-
-  return max_deviation;
-}
-
 } // namespace scarp

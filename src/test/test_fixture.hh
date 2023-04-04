@@ -22,6 +22,8 @@ public:
   void execute_all(const fs::path& result_file,
                    bool adaptive=false,
                    bool vanishing_constraints=false);
+
+  virtual ~ProgramTest() {}
 };
 
 

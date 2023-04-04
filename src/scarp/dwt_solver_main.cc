@@ -4,11 +4,13 @@ using namespace std;
 #include <boost/program_options.hpp>
 namespace po = boost::program_options;
 
-#include "instance_reader.hh"
-#include "control_writer.hh"
+#include "scarp/bounds.hh"
+#include "scarp/parameters.hh"
+#include "scarp/instance_reader.hh"
+#include "scarp/control_writer.hh"
 
-#include "log.hh"
-#include "dwt/dwt_program.hh"
+#include "scarp/log.hh"
+#include "scarp/dwt/dwt_program.hh"
 
 using namespace scarp;
 
@@ -60,10 +62,16 @@ int main(int argc, char **argv)
   std::ifstream input(input_name);
 
   Instance instance = InstanceReader().read_uniform(input);
+
+  const idx dimension = instance.dimension();
+
+  const double max_deviation = bounds::sur_simple(dimension).for_mesh(instance.get_mesh(),
+                                                                      scale_factor);
+
   const auto& controls = instance.get_fractional_controls();
 
-  std::vector<double> switch_on_costs{2, 1, 0};
-  std::vector<double> switch_off_costs{.1, .1, 0};
+  std::vector<double> switch_on_costs = default_switch_on_costs(dimension);
+  std::vector<double> switch_off_costs = default_switch_off_costs(dimension);
 
   std::vector<idx> minimum_dwt{2, 2, 0};
 
@@ -74,7 +82,7 @@ int main(int argc, char **argv)
   DWTProgram program(controls,
                      switch_costs,
                      minimum_dwt,
-                     scale_factor);
+                     max_deviation);
 
   auto min_controls = program.solve();
 

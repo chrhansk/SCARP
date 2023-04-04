@@ -8,13 +8,15 @@ using namespace scarp;
 
 class SCARPProgramTest : public ProgramTest
 {
-private:
+protected:
   const double scale_factor;
 
-protected:
   virtual double execute(const Instance& instance,
                          const CostFunction& costs,
                          bool vanishing_constraints) override;
+
+  virtual double bound_for(const Instance& instance,
+                           bool vanishing_constraints) const;
 
 public:
   SCARPProgramTest(double scale_factor=1.0)

@@ -113,8 +113,6 @@ public:
   const idx dimension() const override;
 };
 
-double max_control_deviation(idx dimension);
-
 } // namespace scarp
 
 #endif /* CONTROLS_HH */

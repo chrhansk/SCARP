@@ -82,7 +82,7 @@ public:
   DWTProgram(const Controls& fractional_controls,
              const CostFunction& costs,
              const std::vector<idx>& minimum_dwt,
-             double scale_factor=1.);
+             double max_deviation);
 
   BinaryControls solve();
 };

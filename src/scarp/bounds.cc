@@ -1,4 +1,4 @@
-#include "deviation_bound.hh"
+#include "bounds.hh"
 
 #include <cassert>
 #include <cmath>
@@ -12,7 +12,10 @@ DeviationBound::DeviationBound(double value)
   assert(_value > 0.);
 }
 
-DeviationBound sur_bound(idx dimension)
+namespace bounds
+{
+
+DeviationBound sur_simple(idx dimension)
 {
   assert(dimension >= 2);
 
@@ -26,35 +29,50 @@ DeviationBound sur_bound(idx dimension)
   return DeviationBound(max_deviation);
 }
 
-DeviationBound nfr_bound(idx dimension)
+DeviationBound nfr(idx dimension)
 {
   return DeviationBound(1.);
 }
 
-DeviationBound sur_vc_bound(idx dimension)
+DeviationBound sur(idx dimension,
+                   bool vanishing_constraints)
+{
+  if(vanishing_constraints)
+  {
+    return sur_vc(dimension);
+  }
+  else
+  {
+    return sur_simple(dimension);
+  }
+}
+
+DeviationBound sur_vc(idx dimension)
 {
   assert(dimension >= 2);
   double dim = (double) dimension;
-  double dim_bound = std::floor(dim / 2.);
-  return DeviationBound((idx) dim_bound);
+  double dim_bd = std::floor(dim / 2.);
+  return DeviationBound((idx) dim_bd);
 }
 
-DeviationBound sur_vc_matching_bound(idx dimension)
+DeviationBound sur_vc_matching(idx dimension)
 {
   return DeviationBound(1.);
 }
 
-DeviationBound best_bound(idx dimension,
+DeviationBound best(idx dimension,
                           bool vanishing_constraints)
 {
   if(vanishing_constraints)
   {
-    return sur_vc_bound(dimension);
+    return sur_vc(dimension);
   }
   else
   {
-    return nfr_bound(dimension);
+    return nfr(dimension);
   }
 }
+
+} // namespace bounds
 
 } // namespace scarp
