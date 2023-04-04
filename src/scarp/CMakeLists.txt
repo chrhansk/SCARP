@@ -56,9 +56,12 @@ install(TARGETS scarp
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
   COMPONENT "libraries")
 
-install(FILES ${HEADERS}
-  DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/scarp"
-  COMPONENT "headers")
+foreach(file ${HEADERS})
+  get_filename_component(dir ${file} DIRECTORY)
+  install(FILES ${file}
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/scarp/${dir}
+    COMPONENT "headers")
+endforeach()
 
 set_target_properties(scarp
   PROPERTIES
