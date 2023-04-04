@@ -1,5 +1,5 @@
-#ifndef SCARP_LABEL_HH
-#define SCARP_LABEL_HH
+#ifndef SCARP_SCARP_LABEL_HH
+#define SCARP_SCARP_LABEL_HH
 
 #include <utility>
 #include <memory>
@@ -100,4 +100,4 @@ struct SCARPLabelComparator
 
 } // namespace scarp
 
-#endif /* SCARP_LABEL_HH */
+#endif /* SCARP_SCARP_LABEL_HH */

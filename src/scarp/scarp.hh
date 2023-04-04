@@ -1,5 +1,5 @@
-#ifndef SCARP_HH
-#define SCARP_HH
+#ifndef SCARP_SCARP_HH
+#define SCARP_SCARP_HH
 
 #include "scarp/dwt/dwt_label.hh"
 #include "scarp/dwt/dwt_program.hh"
@@ -21,4 +21,4 @@
 #include "scarp/controls.hh"
 #include "scarp/handle.hh"
 
-#endif /* SCARP_HH */
+#endif /* SCARP_SCARP_HH */

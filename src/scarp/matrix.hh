@@ -1,5 +1,5 @@
-#ifndef MATRIX_HH
-#define MATRIX_HH
+#ifndef SCARP_MATRIX_HH
+#define SCARP_MATRIX_HH
 
 #include <cassert>
 #include <vector>
@@ -62,4 +62,4 @@ public:
 
 } // namespace scarp
 
-#endif /* MATRIX_HH */
+#endif /* SCARP_MATRIX_HH */

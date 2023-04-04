@@ -1,5 +1,5 @@
-#ifndef BOUNDS_HH
-#define BOUNDS_HH
+#ifndef SCARP_BOUNDS_HH
+#define SCARP_BOUNDS_HH
 
 #include "mesh.hh"
 #include "util.hh"
@@ -60,4 +60,4 @@ DeviationBound best(idx dimension,
 } // namespace scarp
 
 
-#endif /* BOUNDS_HH */
+#endif /* SCARP_BOUNDS_HH */

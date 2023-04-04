@@ -1,5 +1,5 @@
-#ifndef SCARP_PROGRAM_HH
-#define SCARP_PROGRAM_HH
+#ifndef SCARP_SCARP_PROGRAM_HH
+#define SCARP_SCARP_PROGRAM_HH
 
 #include <memory>
 
@@ -80,4 +80,4 @@ public:
 
 } // namespace scarp
 
-#endif /* SCARP_PROGRAM_HH */
+#endif /* SCARP_SCARP_PROGRAM_HH */

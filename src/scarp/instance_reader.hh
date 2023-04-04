@@ -1,5 +1,5 @@
-#ifndef INSTANCE_READER_HH
-#define INSTANCE_READER_HH
+#ifndef SCARP_INSTANCE_READER_HH
+#define SCARP_INSTANCE_READER_HH
 
 #include <iostream>
 #include <fstream>
@@ -24,4 +24,4 @@ public:
 
 } // namespace scarp
 
-#endif /* INSTANCE_READER_HH */
+#endif /* SCARP_INSTANCE_READER_HH */

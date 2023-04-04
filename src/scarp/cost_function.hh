@@ -1,5 +1,5 @@
-#ifndef COST_FUNCTION_HH
-#define COST_FUNCTION_HH
+#ifndef SCARP_COST_FUNCTION_HH
+#define SCARP_COST_FUNCTION_HH
 
 #include <cassert>
 
@@ -79,4 +79,4 @@ public:
 
 } // namespace scarp
 
-#endif /* COST_FUNCTION_HH */
+#endif /* SCARP_COST_FUNCTION_HH */

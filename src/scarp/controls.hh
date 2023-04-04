@@ -1,5 +1,5 @@
-#ifndef CONTROLS_HH
-#define CONTROLS_HH
+#ifndef SCARP_CONTROLS_HH
+#define SCARP_CONTROLS_HH
 
 #include <vector>
 
@@ -115,4 +115,4 @@ public:
 
 } // namespace scarp
 
-#endif /* CONTROLS_HH */
+#endif /* SCARP_CONTROLS_HH */

@@ -1,5 +1,5 @@
-#ifndef TIMER_HH
-#define TIMER_HH
+#ifndef SCARP_TIMER_HH
+#define SCARP_TIMER_HH
 
 #include <algorithm>
 #include <numeric>
@@ -24,4 +24,4 @@ public:
   }
 };
 
-#endif /* TIMER_HH */
+#endif /* SCARP_TIMER_HH */

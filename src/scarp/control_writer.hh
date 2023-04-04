@@ -1,5 +1,5 @@
-#ifndef CONTROL_WRITER_HH
-#define CONTROL_WRITER_HH
+#ifndef SCARP_CONTROL_WRITER_HH
+#define SCARP_CONTROL_WRITER_HH
 
 #include <iostream>
 #include <fstream>
@@ -21,4 +21,4 @@ public:
 
 }
 
-#endif /* CONTROL_WRITER_HH */
+#endif /* SCARP_CONTROL_WRITER_HH */

@@ -1,5 +1,5 @@
-#ifndef BENCHMARK_HH
-#define BENCHMARK_HH
+#ifndef SCARP_BENCHMARK_HH
+#define SCARP_BENCHMARK_HH
 
 #include "controls.hh"
 
@@ -14,4 +14,4 @@ public:
 };
 
 
-#endif /* BENCHMARK_HH */
+#endif /* SCARP_BENCHMARK_HH */

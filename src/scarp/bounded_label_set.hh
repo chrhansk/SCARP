@@ -1,5 +1,5 @@
-#ifndef BOUNDED_LABEL_SET_HH
-#define BOUNDED_LABEL_SET_HH
+#ifndef SCARP_BOUNDED_LABEL_SET_HH
+#define SCARP_BOUNDED_LABEL_SET_HH
 
 #include <cassert>
 #include <map>
@@ -181,4 +181,4 @@ BoundedLabelSet<Label, Costs, Lengths>::is_dominated(std::shared_ptr<Label> labe
 
 } // namespace scarp
 
-#endif /* BOUNDED_LABEL_SET_HH */
+#endif /* SCARP_BOUNDED_LABEL_SET_HH */

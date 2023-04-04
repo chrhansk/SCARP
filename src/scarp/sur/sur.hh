@@ -1,5 +1,5 @@
-#ifndef SUR_HH
-#define SUR_HH
+#ifndef SCARP_SUR_HH
+#define SCARP_SUR_HH
 
 #include "scarp/instance.hh"
 
@@ -12,4 +12,4 @@ BinaryControls compute_sur_controls(const Instance& instance,
 
 } // namespace scarp
 
-#endif /* SUR_HH */
+#endif /* SCARP_SUR_HH */
