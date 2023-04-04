@@ -1,6 +1,10 @@
 # Prerequisites
 *.d
 
+# Build directories
+build/
+release/
+
 # Compiled Object files
 *.slo
 *.lo
