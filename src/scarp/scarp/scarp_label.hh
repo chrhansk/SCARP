@@ -1,7 +1,6 @@
 #ifndef SCARP_SCARP_LABEL_HH
 #define SCARP_SCARP_LABEL_HH
 
-#include <utility>
 #include <memory>
 #include <vector>
 

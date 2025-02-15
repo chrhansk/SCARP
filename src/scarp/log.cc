@@ -17,10 +17,8 @@
 #include <boost/log/support/date_time.hpp>
 
 namespace logging = boost::log;
-namespace src = boost::log::sources;
 namespace expr = boost::log::expressions;
 namespace sinks = boost::log::sinks;
-namespace keywords = boost::log::keywords;
 
 #include "util.hh"
 #include "ansi_color.hh"

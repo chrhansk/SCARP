@@ -2,6 +2,7 @@
 
 #include <boost/container_hash/hash.hpp>
 
+#include "scarp/error.hh"
 #include "scarp/log.hh"
 
 namespace scarp

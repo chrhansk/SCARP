@@ -2,7 +2,6 @@
 #define SCARP_CONTROL_WRITER_HH
 
 #include <iostream>
-#include <fstream>
 
 #include "controls.hh"
 

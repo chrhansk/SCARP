@@ -1,7 +1,6 @@
 #include "scarp_program.hh"
 
 #include <algorithm>
-#include <sstream>
 
 #include "scarp/cmp.hh"
 #include "scarp/error.hh"
