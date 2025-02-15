@@ -51,6 +51,8 @@ private:
 
   const Controls& fractional_controls;
 
+  const bool vanishing_constraints;
+
   const idx size, dimension;
 
   std::vector<idx> minimum_dwt;
@@ -79,7 +81,8 @@ public:
   DWTProgram(const Controls& fractional_controls,
              const CostFunction& costs,
              const std::vector<idx>& minimum_dwt,
-             double max_deviation);
+             double max_deviation,
+             bool vanishing_constraints = false);
 
   BinaryControls solve();
 };

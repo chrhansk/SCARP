@@ -11,12 +11,14 @@ namespace scarp
 DWTProgram::DWTProgram(const Controls &fractional_controls,
                        const CostFunction &costs,
                        const std::vector<idx> &minimum_dwt,
-                       double max_deviation)
+                       double max_deviation,
+                       bool vanishing_constraints)
     : costs(costs), fractional_controls(fractional_controls),
       size(fractional_controls.num_cells()),
       dimension(fractional_controls.dimension()),
       minimum_dwt(minimum_dwt),
       max_deviation(max_deviation),
+      vanishing_constraints(vanishing_constraints),
       fractional_sum(dimension, 0.),
       iteration(0)
 {}
@@ -51,6 +53,18 @@ bool DWTProgram::is_feasible(const DWTLabel& label) const
     double deviation = std::fabs(label.get_control_sums().at(i) - fractional_sum.at(i));
 
     if(deviation > max_deviation)
+    {
+      return false;
+    }
+  }
+
+  if(vanishing_constraints)
+  {
+    const idx i = label.get_current_control();
+
+    double control_value = fractional_controls(iteration, i);
+
+    if(cmp::zero(control_value))
     {
       return false;
     }
