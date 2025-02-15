@@ -10,21 +10,17 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Install General
+      - uses: actions/checkout@v4
+      - name: Install dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y build-essential libboost-all-dev git cmake
       - name: Create build directory and run CMake
         run: |
-          mkdir build
-          cd build
-          cmake .. -DCMAKE_BUILD_TYPE=Debug
+          cmake -DCMAKE_BUILD_TYPE=Debug -Bbuild .
       - name: Build project
         run: |
-          cd build
-          make
+          cmake --build build
       - name: Test project
         run: |
-          cd build
-          make test
+          cmake --build build -t test
