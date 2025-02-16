@@ -21,6 +21,8 @@ std::vector<double> default_switch_on_costs(idx dimension)
     }
   }
 
+  assert(switch_on_costs.size() == dimension);
+
   return switch_on_costs;
 }
 
@@ -36,6 +38,8 @@ std::vector<double> default_switch_off_costs(idx dimension)
   std::vector<double> switch_off_costs(dimension - 1, 0.1);
 
   switch_off_costs.push_back(0.);
+
+  assert(switch_off_costs.size() == dimension);
 
   return switch_off_costs;
 }

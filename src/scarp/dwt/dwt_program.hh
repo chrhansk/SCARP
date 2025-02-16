@@ -63,6 +63,8 @@ private:
 
   idx iteration;
 
+  void insert_label_into_next_front(DWTLabelPtr label);
+
   void create_initial_labels();
 
   void expand_labels();

@@ -18,6 +18,7 @@ public:
   CostFunction(const Instance& instance)
     : instance(instance)
   {}
+
   virtual double initial_costs(idx initial_control,
                                const std::vector<double>& fractional_controls) const = 0;
 

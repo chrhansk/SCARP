@@ -21,12 +21,12 @@ private:
 
 public:
   DWTLabel(idx current_control,
-           double cost_increase,
+           double cost,
            DWTLabelPtr predecessor,
            idx remaining_dwt)
     : Label(predecessor->get_control_sums(),
             current_control,
-            predecessor->get_cost() + cost_increase),
+            cost),
       predecessor(predecessor),
       remaining_dwt(remaining_dwt)
   {

@@ -2,6 +2,7 @@
 #define SCARP_LABEL_HH
 
 #include <cassert>
+#include <vector>
 
 #include "scarp/util.hh"
 
