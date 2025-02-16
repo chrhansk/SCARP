@@ -3,7 +3,7 @@
 #include <cassert>
 #include <cmath>
 
-#include "scarp/instance.hh"
+#include "scarp/mesh.hh"
 #include "scarp/util.hh"
 
 namespace scarp

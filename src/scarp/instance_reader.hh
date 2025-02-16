@@ -2,7 +2,6 @@
 #define SCARP_INSTANCE_READER_HH
 
 #include <iostream>
-#include <fstream>
 
 #include "scarp/controls.hh"
 #include "scarp/instance.hh"

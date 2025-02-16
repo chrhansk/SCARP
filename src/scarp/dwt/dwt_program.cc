@@ -1,7 +1,9 @@
 #include "dwt_program.hh"
 
 #include <boost/container_hash/hash.hpp>
+#include <cassert>
 
+#include "scarp/error.hh"
 #include "scarp/log.hh"
 
 namespace scarp
@@ -10,12 +12,14 @@ namespace scarp
 DWTProgram::DWTProgram(const Controls &fractional_controls,
                        const CostFunction &costs,
                        const std::vector<idx> &minimum_dwt,
-                       double max_deviation)
+                       double max_deviation,
+                       bool vanishing_constraints)
     : costs(costs), fractional_controls(fractional_controls),
       size(fractional_controls.num_cells()),
       dimension(fractional_controls.dimension()),
       minimum_dwt(minimum_dwt),
       max_deviation(max_deviation),
+      vanishing_constraints(vanishing_constraints),
       fractional_sum(dimension, 0.),
       iteration(0)
 {}
@@ -55,6 +59,18 @@ bool DWTProgram::is_feasible(const DWTLabel& label) const
     }
   }
 
+  if(vanishing_constraints)
+  {
+    const idx i = label.get_current_control();
+
+    double control_value = fractional_controls(iteration, i);
+
+    if(cmp::zero(control_value))
+    {
+      return false;
+    }
+  }
+
   return true;
 }
 
@@ -69,6 +85,8 @@ void DWTProgram::create_initial_labels()
 
   for(idx i = 0; i < dimension; ++i)
   {
+    current_front().push_back(LabelMap());
+
     const double initial_cost = costs.initial_costs(i, fractional_sum);
 
     next_front().push_back(LabelMap());
@@ -110,68 +128,88 @@ void DWTProgram::expand_labels()
       {
         expand_label(label);
       }
-
     }
+  }
+}
+
+void DWTProgram::insert_label_into_next_front(DWTLabelPtr label)
+{
+  if(!is_feasible(*label))
+  {
+    return;
+  }
+
+  idx control = label->get_current_control();
+  LabelMap& next_map = next_front().at(control);
+
+  const auto& control_sums = label->get_control_sums();
+
+  auto it = next_map.find(control_sums);
+
+  bool inserted = false;
+
+  if(it == next_map.end())
+  {
+    next_map.insert(std::make_pair(control_sums, LabelSet(label)));
+    inserted = true;
+  }
+  else
+  {
+    auto& label_set = it->second;
+
+    inserted = label_set.insert(label);
   }
 }
 
 void DWTProgram::expand_label(DWTLabelPtr label)
 {
-  for(idx next_control = 0; next_control < dimension; ++next_control)
+  if(label->get_remaining_dwt() > 0)
   {
-    idx remaining_dwt = label->get_remaining_dwt();
-
-    if(label->get_current_control() != next_control)
-    {
-      if(label->get_remaining_dwt() > 0)
-      {
-        continue;
-      }
-
-      remaining_dwt = minimum_dwt.at(next_control);
-
-    }
-    else
-    {
-      if(remaining_dwt > 0)
-      {
-        --remaining_dwt;
-      }
-    }
-
+    double next_control = label->get_current_control();
 
     double next_cost = costs(*label,
                              next_control,
                              iteration,
                              fractional_sum);
 
+    idx remaining_dwt = label->get_remaining_dwt() -1;
+
     auto next_label = std::make_shared<DWTLabel>(next_control,
                                                  next_cost,
                                                  label,
                                                  remaining_dwt);
 
+    insert_label_into_next_front(next_label);
 
-    if(!is_feasible(*next_label))
+    return;
+  }
+
+  assert(label->get_remaining_dwt() == 0);
+
+  for(idx next_control = 0; next_control < dimension; ++next_control)
+  {
+    idx remaining_dwt = 0;
+
+    if(label->get_current_control() != next_control)
     {
-      continue;
+      remaining_dwt = minimum_dwt.at(next_control);
     }
 
-    auto& next_map = next_front().at(next_control);
+    double next_cost = costs(*label,
+                             next_control,
+                             iteration,
+                             fractional_sum);
 
-    const auto& control_sums = next_label->get_control_sums();
+    assert(next_cost - label->get_cost() <= 5.0);
 
-    auto it = next_map.find(control_sums);
+    auto next_label = std::make_shared<DWTLabel>(next_control,
+                                                 next_cost,
+                                                 label,
+                                                 remaining_dwt);
 
-    if(it == next_map.end())
-    {
-      next_map.insert(std::make_pair(control_sums, LabelSet(next_label)));
-    }
-    else
-    {
-      auto& label_set = it->second;
+    assert(next_label->get_cost() == next_cost);
 
-      label_set.insert(next_label);
-    }
+    insert_label_into_next_front(next_label);
   }
 }
 

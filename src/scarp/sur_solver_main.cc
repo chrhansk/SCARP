@@ -1,16 +1,16 @@
 #include <iostream>
+#include <fstream>
 using namespace std;
 
 #include <boost/program_options.hpp>
 namespace po = boost::program_options;
 
-#include "scarp/instance_reader.hh"
-#include "scarp/control_writer.hh"
-
 #include "scarp/bounds.hh"
+#include "scarp/control_writer.hh"
+#include "scarp/cost_function.hh"
+#include "scarp/instance_reader.hh"
 #include "scarp/log.hh"
-#include "scarp/scarp/scarp_program.hh"
-
+#include "scarp/parameters.hh"
 #include "scarp/sur/sur.hh"
 
 using namespace scarp;

@@ -1,8 +1,6 @@
 #ifndef SCARP_UTIL_HH
 #define SCARP_UTIL_HH
 
-#include <vector>
-
 namespace scarp
 {
 

@@ -1,9 +1,6 @@
 #ifndef SCARP_SCARP_PROGRAM_HH
 #define SCARP_SCARP_PROGRAM_HH
 
-#include <memory>
-
-#include <set>
 #include <unordered_set>
 #include <vector>
 
@@ -11,7 +8,6 @@
 
 #include "scarp/controls.hh"
 #include "scarp/instance.hh"
-#include "scarp/parameters.hh"
 
 #include "scarp/cost_function.hh"
 

@@ -6,7 +6,6 @@
 #include "scarp/bounded_label_set.hh"
 #include "scarp/cost_function.hh"
 #include "scarp/controls.hh"
-#include "scarp/error.hh"
 #include "scarp/dwt/dwt_label.hh"
 
 namespace scarp
@@ -52,6 +51,8 @@ private:
 
   const Controls& fractional_controls;
 
+  const bool vanishing_constraints;
+
   const idx size, dimension;
 
   std::vector<idx> minimum_dwt;
@@ -61,6 +62,8 @@ private:
   std::vector<double> fractional_sum;
 
   idx iteration;
+
+  void insert_label_into_next_front(DWTLabelPtr label);
 
   void create_initial_labels();
 
@@ -80,7 +83,8 @@ public:
   DWTProgram(const Controls& fractional_controls,
              const CostFunction& costs,
              const std::vector<idx>& minimum_dwt,
-             double max_deviation);
+             double max_deviation,
+             bool vanishing_constraints = false);
 
   BinaryControls solve();
 };

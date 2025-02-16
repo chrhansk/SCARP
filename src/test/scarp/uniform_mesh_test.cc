@@ -3,7 +3,6 @@
 #include <gtest/gtest.h>
 
 #include "defs.hh"
-#include "scarp/instance.hh"
 #include "scarp/log.hh"
 
 TEST(SCARPProgram, solve_noreg_512_triple_10)

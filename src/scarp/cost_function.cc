@@ -2,6 +2,8 @@
 
 #include <stdexcept>
 
+#include "scarp/log.hh"
+
 namespace scarp
 {
 
@@ -104,9 +106,11 @@ double SwitchCosts::operator()(const Label& previous_label,
     return previous_cost;
   }
 
-  return previous_cost
+  double next_cost = previous_cost
     + switch_off_costs.at(previous_control)
     + switch_on_costs.at(next_control);
+
+  return next_cost;
 }
 
 double SURCosts::initial_costs(idx initial_control,
@@ -155,7 +159,8 @@ double SURCosts::operator()(const Label& previous_label,
   const idx dimension = fractional_control_sums.size();
   const idx cell_size = instance.get_mesh().cell_size(next_cell_index);
 
-  double next_cost = previous_label.get_cost();
+  double previous_cost = previous_label.get_cost();
+  double next_cost = previous_cost;
 
   for(idx control = 0; control < dimension; ++control)
   {
@@ -172,6 +177,9 @@ double SURCosts::operator()(const Label& previous_label,
 
     next_cost = std::max(current_control_cost, next_cost);
   }
+
+  Log(debug) << "SUR costs increased from "
+             << previous_cost << " to " << next_cost;
 
   return next_cost;
 }
