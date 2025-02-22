@@ -1,7 +1,5 @@
 #include "test_fixture.hh"
 
-#include <iostream>
-
 #include <boost/filesystem/fstream.hpp>
 #include <boost/algorithm/string.hpp>
 
@@ -13,55 +11,84 @@
 
 #include "scarp/cmp.hh"
 
+
+class CSVResult {
+
+private:
+  std::map<std::string, int> header;
+  std::vector<std::vector<std::string>> entries;
+
+public:
+  CSVResult(const fs::path& result_path)  {
+    auto split_string = [](const std::string& line)
+      -> std::vector<std::string>
+      {
+        std::vector<std::string> entries;
+
+        boost::split(entries, line, boost::is_any_of(" "));
+
+        for(auto& entry : entries)
+        {
+          boost::algorithm::trim(entry);
+        }
+
+        return entries;
+      };
+
+    auto read_header = [&](const std::string& line)
+      -> std::map<std::string, int>
+      {
+        std::map<std::string, int> fields;
+
+        std::vector<std::string> entries = split_string(line);
+
+        int i = 0;
+
+        for(auto& entry : entries)
+        {
+          fields.insert({entry, i++});
+        }
+
+        return fields;
+      };
+
+
+    fs::ifstream input{result_path};
+
+    std::string line;
+
+    std::getline(input, line);
+
+    header = read_header(line);
+
+    while(std::getline(input, line))
+    {
+      entries.push_back(split_string(line));
+    }
+  }
+
+  const std::map<std::string, int>& get_header()
+  {
+    return header;
+  }
+  
+  const std::vector<std::vector<std::string>>& get_entries()
+  {
+    return entries;
+  }
+};
+
+
+
 void ProgramTest::execute_all(const fs::path& result_path, bool adaptive, bool vanishing_constraints)
 {
-  auto split_string = [](const std::string& line)
-    -> std::vector<std::string>
-    {
-      std::vector<std::string> entries;
+  CSVResult result(result_path);
 
-      boost::split(entries, line, boost::is_any_of(" "));
+  const int name_field = result.get_header().at("Name");
+  const int cost_field = result.get_header().at("SCARP");
 
-      for(auto& entry : entries)
-      {
-        boost::algorithm::trim(entry);
-      }
-
-      return entries;
-    };
-
-  auto read_header = [&](const std::string& line)
-    -> std::map<std::string, int>
-    {
-      std::map<std::string, int> fields;
-
-      std::vector<std::string> entries = split_string(line);
-
-      int i = 0;
-
-      for(auto& entry : entries)
-      {
-        fields.insert({entry, i++});
-      }
-
-      return fields;
-    };
-
-  fs::ifstream input{result_path};
-
-  std::string line;
-
-  std::getline(input, line);
-
-  auto fields = read_header(line);
-
-  const int name_field = fields.at("Name");
-  const int cost_field = fields.at("SCARP");
-
-  while(std::getline(input, line))
+  for(const auto& row: result.get_entries())
   {
-    auto row = split_string(line);
-
     auto instance_name = row.at(name_field);
 
     double expected = std::stof(row.at(cost_field));
