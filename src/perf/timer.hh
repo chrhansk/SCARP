@@ -5,7 +5,7 @@
 #include <numeric>
 #include <chrono>
 
-#include "log.hh"
+#include "scarp/log.hh"
 
 class Timer
 {

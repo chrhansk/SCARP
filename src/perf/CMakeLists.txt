@@ -3,7 +3,8 @@ add_library(perf_common
   benchmark.cc)
 
 target_link_libraries(perf_common
-  common)
+  scarp
+  ${Boost_LIBRARIES})
 
 add_custom_target(build_benchmarks)
 

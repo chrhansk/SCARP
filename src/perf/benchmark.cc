@@ -4,12 +4,13 @@
 namespace po = boost::program_options;
 
 #include <boost/filesystem.hpp>
+#include <boost/filesystem/fstream.hpp>
 namespace fs = boost::filesystem;
 
-#include "control_reader.hh"
-#include "control_writer.hh"
-
-#include "log.hh"
+#include "scarp/control_writer.hh"
+#include "scarp/instance_reader.hh"
+#include "scarp/log.hh"
+#include "scarp/parameters.hh"
 
 #include "timer.hh"
 
@@ -78,25 +79,33 @@ void Benchmark::execute_all(int argc, char** argv)
 
   for(const auto& current_path : instances)
   {
-    fs::ifstream input{current_path};
+    fs::ifstream instance_input{current_path};
 
-    auto fractional_controls = InstanceReader().read(input);
+    auto instance = InstanceReader().read(instance_input, false);
 
-    const int n = 100;
+    const idx dimension = instance.dimension();
+
+    std::vector<double> switch_on_costs = default_switch_on_costs(dimension);
+    std::vector<double> switch_off_costs = default_switch_off_costs(dimension);
+
+    SwitchCosts switch_costs(instance,
+                             switch_on_costs,
+                             switch_off_costs);
+
+    const int num_runs = 100;
 
     double elapsed = 0.;
 
-    for(int i = 0; i < n; ++i)
+    for(int i = 0; i < num_runs; ++i)
     {
       Timer timer;
 
-      auto min_controls = execute(fractional_controls,
-                                  scale_factor);
+      execute(instance, switch_costs);
 
       elapsed += timer.elapsed();
     }
 
-    elapsed /= (double) n;
+    elapsed /= (double) num_runs;
 
     std::cout << current_path.filename()
               << ","
@@ -105,11 +114,11 @@ void Benchmark::execute_all(int argc, char** argv)
 
     auto current_output_path = output_path / current_path.filename().replace_extension("dat");
 
-    /*
     fs::ofstream output{current_output_path};
 
+    auto min_controls = execute(instance, switch_costs);
+
     ControlWriter().write(output, min_controls);
-    */
   }
 
 }

@@ -1,20 +1,22 @@
 #include "benchmark.hh"
 
-#include "sur/sur.hh"
+#include "scarp/sur/sur.hh"
 
 class SURBenchmark : public Benchmark
 {
 public:
-  virtual std::vector<Controls> execute(const std::vector<Controls>& fractional_controls,
-                                        double scale_factor) override;
+  virtual BinaryControls execute(const Instance& instance,
+                                 const CostFunction& costs,
+                                 bool vanishing_constraints) override;
 
 };
 
-std::vector<Controls>
-SURBenchmark::execute(const std::vector<Controls>& fractional_controls,
-                        double scale_factor)
+BinaryControls
+SURBenchmark::execute(const Instance& instance,
+                      const CostFunction& costs,
+                      bool vanishing_constraints)
 {
-  return compute_sur_controls(fractional_controls);
+  return compute_sur_controls(instance, vanishing_constraints);
 }
 
 
